@@ -1,0 +1,19 @@
+\subsubsection{Safety}
+
+\[ \ew{ \safety.\Prog  \3\equiv  \G (\J \lor \qexists{a}{a \in \Prog}{ a });\ctrue } \]
+
+where $\J$ is a special atomic action which does not change the state,
+i.e. satisfying
+\begin{align}
+  & \ew{\J \implies \X} \notag \\
+  & p;\J = \J;p~, \textrm{for all state predicate $p$}~.  \label{eq:skip}
+\end{align}
+\eqref{eq:saf} specifies that every computation starts from a
+state satisfying $\InitPred$, and every two consecutive states are
+supported by an atomic action in $A$ or the special atomic
+action $\J$.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "progress"
+%%% End: 

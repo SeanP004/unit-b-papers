@@ -1,0 +1,48 @@
+%%%%%
+% Package for computation calculus.
+%%%%%
+%%%%%
+% Change logs
+%
+% 2011/08/25:
+% - Initial version.
+%%%%%
+\NeedsTeXFormat{LaTeX2e}\relax
+\ProvidesPackage{comp-cal}[2011/08/25]
+
+%%%%% Require packages
+\RequirePackage{dsfont}
+
+%%%%% (BEGIN) Macros for computation calculus %%%
+\newcommand{\State}{\mathcal{S}}
+\newcommand{\Computation}{\mathcal{C}}
+\newcommand{\CPred}{CPred}
+\newcommand{\BOOL}{\mathds{B}}
+\newcommand{\Comp}{\tau}
+\newcommand{\eqv}{\equiv}
+\newcommand{\ctrue}{\mathbf{true}}
+\newcommand{\cfalse}{\mathbf{false}}
+\newcommand{\size}{\#}
+\newcommand{\take}{\uparrow}
+\newcommand{\drop}{\downarrow}
+%%%%% (END) Macros for computation calculus %%%
+
+
+\newcommand{\one}{\mathds{1}}
+\newcommand{\G}{\mathbf{G}\,}
+\newcommand{\X}{\mathbf{X}}
+\newcommand{\E}{\mathbf{E}}
+\newcommand{\F}{\mathbf{F}}
+\newcommand{\s}{\textbf{S}}
+
+% \newcommand{\guard}{\rightarrow}
+% \newcommand{\infiter}[1]{ {^\infty}#1}
+% \newcommand{\finiter}[1]{ {^*}#1}
+\newcommand{\spneg}{ \sim \! }
+
+\newcommand{\SPred}{SPred}
+\newcommand{\initially}{\bullet}
+\newcommand{\ltlnext}{\mathds{X}}
+
+%\newcommand{\sforall}{\uplus}
+%\newcommand{\qsforall}[3]{ \quant{\sforall}{#1}{#2}{#3} } 

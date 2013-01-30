@@ -1,0 +1,42 @@
+%%%% This is a fix for amsmath's warning.
+% Package amsmath Warning: Unable to redefine math accent \vec.
+\let\accentvec\vec
+\documentclass{llncs}
+\let\spvec\vec
+\let\vec\accentvec
+
+\author{Simon Hudon~\inst{1} \and Thai Son Hoang~\inst{2}}
+\tocauthor{Hudon and Hoang}
+\authorrunning{Hudon and Hoang}
+\institute{
+  Department of Computer Science,  York University, Toronto, Canada \\
+  \email{simon@cse.yorku.ca}
+  \and
+  Institute of Information Security, ETH-Zurich, Switzerland \\
+  \email{htson@inf.ethz.ch}
+}
+
+%\title{Progress-Preserving Refinement}
+\title{Progress Concerns as Design Guidelines}
+\date{\today}
+
+% Theorem package
+\newcounter{def}
+\newtheorem{Definition}[def]{Definition}
+\newcommand{\Defn}{Definition}
+\newcounter{ptl}
+\newtheorem{Postulate}[ptl]{Postulate}
+\newcommand{\Post}{Postulate}
+\newcounter{exp}
+\newtheorem{Example}[exp]{Example}
+\newcommand{\Exmp}{Example}
+\newcounter{thm}
+\newtheorem{Theorem}[thm]{Theorem}
+\newcommand{\Thm}{Theorem}
+
+\input{main}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

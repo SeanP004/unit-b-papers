@@ -1,0 +1,35 @@
+\subsubsection{Program Properties}
+Finally, to reap the full benefits of the generalization, it is generally convenient to maintain $c \mapsto f$ as a property of the specification.
+\todo{ nuance: a property holds of a specification if is a property of the specification or if it could be proved using the properties and the program }
+
+\sout{we introduce coarse ($c$) and fine ($f$) schedules together and deal with them in separation. To implement $\tr p$, we proceed by satisfying the antecedent of \eqref{eq:sch} by requiring that $\G (p \implies c)$ and $c \mapsto f$ be true of the specification. This way, manipulating the schedule and the guard of an action becomes much simpler.}
+\todo{together and in separation?}
+
+\todo{magic scheduling?}
+
+Our definition of transient predicate becomes:
+\[ \ew{ (p \1\mapsto \spneg p) \2\follows ex.\Prop} \follows \tr p \uin \Prop \]
+\begin{align*}
+ \tr p \uin (\Prog, \Prop)  \2\equiv \qexists{a}{ a \in \Prog }{ \text{tra}.p.a.\Prop }
+\end{align*}
+\begin{align*}
+	\text{tra}.p.a.\Prop \2\equiv 
+	\quad	& \hoare{ p \land c \land f \land g }{ a }{ \neg p } \tag{FALS} \\
+	\land ~~	& \ew{ \G \bullet( p \implies c) \2\follows ex.\Prop} \tag{EN} \\
+	\land ~~ 	& \ew{ (c \mapsto f) \2\follows ex.\Prop } \tag{PR}
+\end{align*}
+\todo{check names with respect to Spec = (Prop, Prog)}
+\todo{equation numbers}
+\todo{where do we place $c \mapsto f$? \sout{in the implementation of $\mapsto$} or \underline{in def of $\tr$}}
+\todo{deal with accessors (for schedules, guards, statement) in such a way that we can only name the ones that we need in any formula}
+
+\todo{weave the definition of transient together with the scheduling detail}
+\todo{1-2 pages}
+\begin{itemize}
+\item $\tr$
+\item $\co$
+\item invariants
+\end{itemize}
+
+In order to prove that a given program satisfies an arbitrary temporal property, we use program properties.  The definition of program properties are tied closely to the semantics of a program and provide a relation with the more general temporal properties.  However, unlike temporal properties, program properties are not all preserved by refinement.  For instance, transient predicates, which state that a certain goal is reached in one helpful step, are useful to implement leads-to properties but it is unnecessary to make sure that the given goal is only reached in one step: it might be appropriate at one level of abstraction to take only one step to accomplish a goal but, as the refinement goes, it might become necessary to distinguish between various phases of that step.
+\todo{ is there really enough room to make a distinction between co and unless? }

@@ -1,0 +1,57 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+We presented in this paper \unitb, a formal method inspired by \eventB
+and \unity.  Our method allows systems to be developed gradually via
+refinement and support reasoning about both safety and liveness
+properties.  An important feature of \unitb is the notion of coarse-
+and fine-schedules for events.  Standard weak- and strong-fairness
+assumptions can be expressed using these event schedules.  We
+proposed refinement rules to manipulate the coarse-
+and fine-schedules such that liveness properties are
+preserved.  We illustrated \unitb by developing a signal control
+system.
+
+A key observation in \unitb is the role of event scheduling regarding
+liveness properties being similar to the role of guards regarding safety
+properties.  Guards prevents events to occur in some unsafe state such
+that safety properties cannot be violated.  Schedules ensure event
+occurrences such that liveness properties can be satisfied.  Another
+key aspect of \unitb is the role of progress properties during
+refinement.  Often, to ensure the validity of a refinement, one needs
+to prove some progress properties which (eventually) can be
+``implemented'' (satisfied) by some scheduled events.
+
+\paragraph{Related work}
+\input{rel-work}
+
+\paragraph{Future work}
+
+%%%%% Data refinement
+Currently, we only consider superposition refinement in \unitb where
+variables are retained during refinement.  More generally, variables
+can be removed and replaced by other variables during refinement (data
+refinement).  We are working on extending \unitb to support data
+refinement.  We expect to have more refinement rules to complement the
+current set of rules.
+
+%%%%% Decomposition/Composition 
+Another important technique for coping with the difficulties in
+developing complex systems is composition/decomposition and is already
+a part of methods such as \eventB and \unity.  We intend to investigate
+on how this technique can be added to \unitb, in particular, the role
+of event scheduling during composition/decomposition.
+
+%%%%% Tool support
+Given the close relationship between \unitb and \eventB, we are
+looking at extending the supporting Rodin
+platform~\cite{abrial10:_rodin} of \eventB to accomodate \unitb.  We
+expect to generate the corresponding proof obligations according to
+different refinement rules such that it can be verified using the
+existing provers of Rodin.
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "progress"
+%%% End: 

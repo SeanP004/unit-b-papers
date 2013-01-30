@@ -1,0 +1,38 @@
+%%%%%
+% Package for creating TODOs.
+%%%%%
+%%%%%
+% Change logs
+%
+% 2011/07/18:
+% - Initial version.
+%%%%%
+\NeedsTeXFormat{LaTeX2e}\relax
+\ProvidesPackage{todo}[2011/07/18]
+
+%%%%%
+% Macro for create a todo item with the text as marginpar at the place
+% of the macros and an entry in the list of todos.
+% Arguments:
+% - 1st: The TODO text.
+% Usage:
+% \todo{An to do item}
+%%%%%
+\newcommand{\todo}[1]{
+  \addcontentsline{tdo}{todo}{\protect{#1}}
+  \marginpar{#1}
+}
+
+
+%%%%%
+% Macro for create a list of todos.
+% Usage: \listoftodos
+%%%%%
+\makeatletter
+\newcommand \listoftodos{
+  \section*{Todo list} \@starttoc{tdo}
+}
+\newcommand\l@todo[2]{
+  \par\noindent \textit{#2}. \parbox{10cm}{#1}\par
+}
+\makeatother

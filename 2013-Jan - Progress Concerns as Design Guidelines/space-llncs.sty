@@ -1,0 +1,75 @@
+%
+%  LNCS space saver
+%
+%  Hacked by Beppe Castagna
+%
+%  Daniele Varacca is to be blamed for this version
+%
+%  2005
+%
+%
+% This bit change the section header spacing
+% Hack the numbers to get different results
+%
+% \renewcommand\section{\@startsection{section}{1}{\z@}%
+%                        {-16\p@ \@plus -2\p@ \@minus -2\p@}%
+%                        {6\p@ \@plus 2\p@ \@minus 2\p@}%
+%                        {\normalfont\large\bfseries\boldmath
+%                         \rightskip=\z@ \@plus 8em\pretolerance=10000 }}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+                       {-11\p@ \@plus -2\p@ \@minus -2\p@}%
+                       {4\p@ \@plus 2\p@ \@minus 2\p@}%
+                       {\normalfont\normalsize\bfseries\boldmath
+                        \rightskip=\z@ \@plus 8em\pretolerance=10000 }}
+% \renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+%                        {-18\p@ \@plus -4\p@ \@minus -4\p@}%
+%                        {-0.5em \@plus -0.22em \@minus -0.1em}%
+%                        {\normalfont\normalsize\bfseries\boldmath}}
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+                       {-5\p@ \@plus -2\p@ \@minus -2\p@}%
+                       {-0.3em \@plus -0.12em \@minus -0.1em}%
+                       {\normalfont\normalsize\itshape}}
+
+% \renewcommand\section{\@startsection{section}{1}{\z@}%
+%                        {-18\p@ \@plus -4\p@ \@minus -4\p@}%
+%                        {12\p@ \@plus 4\p@ \@minus 4\p@}%
+%                        {\normalfont\large\bfseries\boldmath
+%                         \rightskip=\z@ \@plus 8em\pretolerance=10000 }}
+% \renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+%                        {-18\p@ \@plus -4\p@ \@minus -4\p@}%
+%                        {8\p@ \@plus 4\p@ \@minus 4\p@}%
+%                        {\normalfont\normalsize\bfseries\boldmath
+%                         \rightskip=\z@ \@plus 8em\pretolerance=10000 }}
+% \renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+%                        {-18\p@ \@plus -4\p@ \@minus -4\p@}%
+%                        {-0.5em \@plus -0.22em \@minus -0.1em}%
+%                        {\normalfont\normalsize\bfseries\boldmath}}
+% \renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+%                        {-12\p@ \@plus -4\p@ \@minus -4\p@}%
+%                        {-0.5em \@plus -0.22em \@minus -0.1em}%
+%                        {\normalfont\normalsize\itshape}}
+
+% This bit change the spacing in the title - abstract part
+% and makes the abstract a little bit wider
+% Hack the numbers to get different results
+% \renewenvironment{abstract}{%
+%       \vspace{-5mm} % raise it of half cm
+%       \list{}{\advance\topsep by0.35cm\relax\small
+%       \leftmargin=0.9cm   %make it wider was 1cm
+%       \labelwidth=\z@
+%       \listparindent=\z@
+%       \itemindent\listparindent
+%       \rightmargin\leftmargin}\item[\hskip\labelsep
+%                                     \bfseries\abstractname]}
+%     {\endlist}
+
+% \renewenvironment{abstract}{%
+%       \list{}{\advance\topsep by0.35cm\relax\small
+%       \leftmargin=1cm
+%       \labelwidth=\z@
+%       \listparindent=\z@
+%       \itemindent\listparindent
+%       \rightmargin\leftmargin}\item[\hskip\labelsep
+%                                     \bfseries\abstractname]}
+%     {\endlist}
+

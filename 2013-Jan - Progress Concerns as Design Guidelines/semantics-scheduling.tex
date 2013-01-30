@@ -1,0 +1,71 @@
+\subsubsection{Scheduling}
+For event based specification methods, there are three popular execution strategy. Minimal progress is a strategy for which an action of the system is chosen non-deterministically as long as some action is enabled. In principle, this is the strategy used in \eventB except that .
+
+\paragraph{Weak and Strong Fairness}
+With weak fairness, actions which remain enabled for infinitely long are chosen for execution infinitely often.  This is the strategy that was chosen for \unity.
+
+Finally, strong fairness 
+actions are chosen infinitely often for execution if they are enabled infinitely often.  It may not be suitable for direct implementation of programs but it provides an abstraction for specifying how contention over resources are settled without describing a mechanism but while ensuring that some progress properties hold. A brief treatment of strong fairness is presented in \cite[sect.\ 6.5.7]{DBLP:journals/csur/Misra96} but it doesn't use strong fairness as an abstraction.  Instead the book present some techniques to simulate strong fairness.  In \cite{DBLP:journals/fac/JutlaR97}, a rule for using strong fairness in proofs of progress is provided but it does not behave well with program refinement.
+
+In \unitb, both weak fairness and strong fairness are covered directly. Minimal progress could be simulated but the need for doing so would be justified more by a particular execution platform than by the need for a particular abstraction.
+%
+\todo{2 pages}
+\todo{distinguish between guard and schedules}
+\begin{itemize}
+\item Weak fairness.
+	\begin{equation}
+		\ew{ \wf.(g, A)  \2\equiv  \G (\G \bullet g \1\implies \G \F;g;A;\ctrue) }
+	\end{equation}
+\item Strong fairness.
+	\begin{equation}
+		\ew{ \strf.(g, A)  \2\equiv  \G (\G \F;\bullet g \1\implies \G \F;g;A;\ctrue) }
+	\end{equation}
+\end{itemize}
+%
+The necessity for putting together the notions of strong and weak fairness into one formulation of fair scheduling comes from the difficulty of using strong fairness alone with refinement.  Neither the notion of strong fairness nor that of weak fairness turn out to be any less useful as a consequence of the combination.
+
+If we look at the definition of transient from \cite{DBLP:journals/csur/Misra96} i.e., 
+	\[ \tr p \uin \Prog  \2\equiv 
+			\qexists{g,a}{(g,a) \in A}{ \inv ( p \implies g ) \uin \Prog 
+				\1\land \hoare{p}{a}{\neg p} } \]
+we might be tempted to generalize it for strong fairness similarly to what was done in \cite{DBLP:journals/fac/JutlaR97} 
+	\[ \tr p \uin \Prog  \2\equiv 
+			\qexists{g,a}{(g,a) \in A}{ p \mapsto g \uin \Prog
+				\1\land \hoare{p\land g}{a}{\neg p} } \]
+
+The problem with the above definition is that, if we want to replace the guard of an action by $h$, we have to prove $p \mapsto h$ for all transient predicate relying on the action.  It would be hard to do, however, since transient predicates are not encoded in a program once they have been proven to hold and they are not among the properties that we want refinement to preserve. Preserving transient predicates would have the consequence of fixing a number of steps implementing a certain property which is not a commitment we wish to make early on.
+\todo{guard? schedule?}
+
+\todo{be careful: use "action" always or "event" always}
+\todo{maybe rename $c$ as $cs$ and $f$ as $fs$ otherwise $f$ looks like a function}
+\paragraph{Generalized Scheduling}
+Instead, we distinguish between three kinds of guards that an action can have \emph{simultaneously}:
+\begin{itemize}
+\item The coarse schedule ($c$) has the role a guard has with respect to weak fairness: if it holds forever, the action will be executed infinitely often.  
+
+\item The fine schedule ($f$) relates to strong fairness: if it holds infinitely often, the action will be executed infinitely often. 
+
+\item The guard ($g$) prevents an action from being executed when it would violate an invariant or another safety property.  
+\end{itemize}
+It is important to see that while the two schedules make sure that an action is executed under certain circumstances, they say nothing of when it should \emph{not} be executed. On the other hand, the guard tells us when it is safe for the action to be executed but never prescribes that the action be executed. It only prevents it from being executed if the conditions are unfavorable.
+
+We now present the formulation of our generalized scheduling assumption
+\begin{itemize}
+\item Generalized Scheduling
+	\begin{equation}
+			\label{eq:sch}
+		\ew{ sch.(c, f, A)  \3\equiv  
+			\G (\G \bullet c \1\land \G \F;\bullet f \2\implies \G \F;(c\land f);A;\ctrue) }
+	\end{equation}
+\end{itemize}
+
+\todo{ feasibility }
+\todo{ make sure that it is clear where the guard went }
+
+For the sake of cohesion between the schedules and the guard, we require that the conjunction of the schedule be stronger than the guard.
+
+\begin{equation}
+\G \bullet (c \land f \1\implies g) 
+\end{equation}
+\todo{name proof obligations}
+

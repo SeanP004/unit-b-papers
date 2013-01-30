@@ -1,0 +1,15 @@
+%% This file provides the capability for defining a macro that inserts a full
+%% string and its abbreviation on its first occurrence and only the
+%% abbreviation on subsequent occurrences.
+
+%% The macro
+%% \newabbrev{Full String}{FS}
+%% creates a macro \FS
+%% The first occurrence of \FS will be replaced by Full String (FS)
+%% subsequent occurrences of \FS will be replaced by FS
+
+\newcommand{\newabbrev}[2]{%
+  \expandafter\def\csname#2\endcsname{%
+    \emph{#1} (\emph{#2})%
+    \expandafter\def\csname#2\endcsname{\emph{#2}\xspace}%
+    \xspace}}

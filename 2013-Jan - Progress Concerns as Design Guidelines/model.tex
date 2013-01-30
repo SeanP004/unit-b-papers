@@ -1,0 +1,521 @@
+%%%% This is a fix for amsmath's warning.
+% Package amsmath Warning: Unable to redefine math accent \vec.
+\newcommand\PREAMBLE{}
+\let\accentvec\vec
+\documentclass{llncs}
+\let\spvec\vec
+\let\vec\accentvec
+
+\author{Simon Hudon~\inst{1} \and Thai Son Hoang~\inst{2}}
+\tocauthor{Hudon and Hoang}
+\authorrunning{Hudon and Hoang}
+\institute{
+  Department of Computer Science,  York University, Toronto, Canada \\
+  \email{simon@cse.yorku.ca}
+  \and
+  Institute of Information Security, ETH-Zurich, Switzerland \\
+  \email{htson@inf.ethz.ch}
+}
+
+%\title{Progress-Preserving Refinement}
+\title{Development of a Signal Control System Guided by Progress Concerns}
+\date{\today}
+
+% Theorem package
+\newcounter{def}
+\newtheorem{Definition}[def]{Definition}
+\newcommand{\Defn}{Definition}
+\newcounter{ptl}
+\newtheorem{Postulate}[ptl]{Postulate}
+\newcommand{\Post}{Postulate}
+\newcounter{exp}
+\newtheorem{Example}[exp]{Example}
+\newcommand{\Exmp}{Example}
+\newcounter{thm}
+\newtheorem{Theorem}[thm]{Theorem}
+\newcommand{\Thm}{Theorem}
+
+\usepackage{abbrev}
+
+% Some standard LaTeX packages.
+\usepackage{xspace}
+\usepackage{color}
+\usepackage{datetime}
+\usepackage{space-llncs}
+
+% Package for common math symbols.
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Package for customized spacings
+\usepackage{space}
+
+% Package for reference
+\usepackage{varioref}
+
+% Use Times as the main fonts
+\usepackage{times}
+
+\usepackage{wrapfig}
+\usepackage{reasoning}
+
+% Use strike through text for the todos
+\usepackage[normalem]{ulem}
+
+% TODOs
+\usepackage{todo}
+
+% Package for calculational proofs
+\usepackage{calculation}
+
+% Package for computation calculus
+\usepackage{comp-cal}
+
+% Package for relational calculus
+\usepackage{rel-cal}
+
+% Package for xspace
+\usepackage{xspace}
+
+% Package for UNITY
+\usepackage{unity}
+
+% Package for B symbols
+\usepackage{bsymb}
+
+% Package for Event-B
+\usepackage[color]{eventB}
+
+% Package for TLA
+\usepackage{tla}
+
+% Package for Unit-B
+\usepackage{unitb}
+
+% Package for tikz
+\usepackage{tikz}
+\usetikzlibrary{snakes,arrows}
+
+% Package for requirement document
+\usepackage[compact]{reqdoc}
+%%%% Some macros used in formal models.
+
+\usepackage[plainpages=false]{hyperref}
+\hypersetup{
+  bookmarks=true,
+  pdftitle={},
+  pdfauthor={Simon Hudon and Thai Son Hoang,
+    Department of Computer Science, York University, Toronto, Canada
+    and
+    Institute of Information Security, ETH Zurich, Switzerland
+  },
+  pdfsubject={Refinement, Progress},
+  pdfkeywords={Refinement, Progress, Temporal Logic},
+  colorlinks=true
+}
+
+\begin{document}
+
+\section{Initial Model}
+\label{sec:initial-model}
+
+\newBset[TRAIN]{TRN}
+\newBvrb[trains]{trns}
+\newBpar[train]{t}
+\newBevt{arrive}
+\newBevt{depart}
+\newBinv[invTrainType]{inv0\_1}
+
+\begin{Bcode}
+  $
+  \carriersets{
+    \TRAIN
+  }
+  $
+  \Bhspace
+  $ \variables{\trains} $
+  \Bhspace
+  $
+  \invariants{
+    \invTrainType: & \trains \subseteq \TRAIN
+  }
+  $
+  \Bvspace
+  $
+  \initialisation{
+    \trains = \emptyset
+  }
+  $
+  \Bvspace
+  $
+  \ubevent{\arrive}
+  {\train}
+  {\train \in \TRAIN}
+  {}
+  {}
+  {\trains \bcmeq \trains \bunion \{\train\}}
+  $
+  \Bhspace
+  $
+  \ubevent{\depart}{\train}{\train \in \TRAIN}{\train \in \trains}{}{\trains \bcmeq \trains \setminus \{\train\}}
+  $
+  \Bvspace
+  $
+  \properties{
+    \Binv{prg0\_2}: & \tr \train \in \trains \\
+    \Bthm{prg0\_1}: & \train \in \trains \leadsto t \notin \trains
+  }
+  $
+\end{Bcode}
+
+\subsection{First Refinement}
+\label{sec:first-refinement}
+
+\newBset[BLOCK]{BLK}
+\newBcst{Entry}
+\newBcst[PLATFORM]{PLF}
+\newBcst{Exit}
+\newBaxm[axmBlockType]{axm1\_1}
+\newBaxm[axmPlatformNonEmpty]{axm1\_2}
+\newBvrb[location]{loc}
+\newBinv[invLocationType]{inv1\_1}
+\newBevt{moveout}
+\newBevt{movein}
+
+\begin{Bcode}
+  $
+  \carriersets{\BLOCK}
+  $
+  \Bhspace
+  $
+  \constants{\Entry, \PLATFORM, \Exit}
+  $
+  \Bvspace
+  $
+  \axioms{
+    \axmBlockType: & \partition(\BLOCK, \{\Entry\}, \PLATFORM,
+    \{\Exit\}) \\
+    \axmPlatformNonEmpty & \PLATFORM \neq \emptyset
+  }
+  $
+  \Bvspace
+  $
+  \variables{\trains, \location}
+  $
+  \Bhspace
+  $
+  \invariants{
+    \Binv{inv1\_1}: & \location \in \trains \tfun \BLOCK
+  }
+  $
+  \Bvspace
+  $
+  \initialisation{
+    \trains = \emptyset \wide\land \\
+    \location = \emptyset
+  }
+  $
+  \Bvspace
+  $
+  \ubevent{\arrive}{\train}{\train \in \TRAIN}{}{}{
+    \trains \bcmeq \trains \bunion \{\train\} \\
+    \location(\train) \bcmeq \Entry
+  }
+  $
+  \Bhspace
+  $ \ubevent{\depart}{\train}{ \train \in \trains \land
+    \location.\train = \Exit } { \train \in \trains \land
+    \location.\train = \Exit} {} {\trains \bcmeq \trains \setminus
+    \{\train\} \\ \location \bcmeq \{\train\} \domsub \location} $
+  \Bvspace
+    $
+  \ubevent{\moveout}{\train}
+  {\train \in \trains \land \location.\train \in \PLATFORM}
+  {\train \in \trains \land \location.\train \in \PLATFORM}
+  {}
+  {\location.\train \bcmeq \Exit}
+  $
+  \Bvspace
+  $
+  \ubevent{\movein}{\train}
+  {\train \in \trains \land \location.\train = \Entry}
+  {\train \in \trains \land \location.\train = \Entry}
+  {}
+  {\location \bcmsuch \qexists{p}{p \in \PLATFORM}{\location'
+    = \location \ovl \{\train \mapsto p\}}}
+  $
+  \Bvspace
+  $
+  \properties{
+    \Binv{prg1\_9}: & \tr  \train \in \trains \land \location.\train
+    \neq \Exit \land \location.\train \notin \PLATFORM \\
+    \Binv{un1\_8}: & \train \in \trains \land \location.\train
+    \neq \Exit \land \location.\train \notin \PLATFORM ~\un~ \train \in
+    \trains \land \location.\train \in \PLATFORM \\
+    \Bthm{prg1\_7}: & \train \in \trains \land \location.\train
+    \neq \Exit \land \location.\train \notin \PLATFORM ~\leadsto~ \train \in
+    \trains \land \location.\train \in \PLATFORM \\
+    \Binv{prg1\_6}: & \tr \train \in \trains \land \location.\train \in
+    \PLATFORM \\
+    \Binv{un1\_5}: & \train \in \trains \land \location.\train \in \PLATFORM ~\un~
+    \train \in \trains \land \location.\train = \Exit \\
+    \Bthm{prg1\_4}: & \train \in \trains \land \location.\train
+    \in \PLATFORM ~\leadsto~ \train \in
+    \trains \land \location.\train = \Exit \\
+    \Bthm{prg1\_3}: & \train \in \trains \land \location.\train
+    \neq \Exit ~\leadsto~ \train \in
+    \trains \land \location.\train \in \PLATFORM \\
+    \Bthm{prg1\_2}: & \train \in \trains \land \location.\train \neq \Exit ~\leadsto~ \train \in \trains \land
+    \location.\train = \Exit \\
+    \Binv{un1\_2}: & \train \in \trains \land \location.\train =
+    \Exit ~\un~ \spneg (\train \in \trains)\\
+    \Bthm{prg1\_1}: & \train \in \trains ~\leadsto~ \train \in \trains
+    \land \location.\train = \Exit
+  }
+  $
+\end{Bcode}
+
+Reasoning remarks:
+\begin{center}
+  \begin{tabular}{|l|l|}
+    \hline
+    Consequence & Antecedents \\
+    \hline
+    Coarse-schedule strengthening \depart & \Bthm{prg1\_1},
+    \Binv{un1\_2} \\
+    \Bthm{prg1\_1} & \Bthm{prg1\_2} (Split-off-skip) \\
+    \Bthm{prg1\_2} & \Bthm{prg1\_3}, \Bthm{prg1\_4} (transitivity) \\
+    \Bthm{prg1\_4} & \Binv{un1\_5}, \Binv{prg1\_6} (ensure-rule) \\
+    \Binv{prg1\_6} & implemented by $\moveout.\train$ (transient-rule) \\
+    \Bthm{prg1\_3} & \Binv{prg1\_7}  (Split-off-skip) \\
+    \Bthm{prg1\_7} & \Binv{un1\_8}, \Binv{prg1\_9} (ensure-rule) \\
+    \Binv{prg1\_9} & implemented by $\movein.\train$ (transient-rule) \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Second Refinement}
+\label{sec:second-refinement}
+
+\begin{Bcode}
+  $
+  \variables{\trains, \location}
+  $
+  \Bvspace
+  $
+  \invariants{
+    \Binv{inv2\_1}: & \qforall{\train_1,\train_2}{\train_1, \train_2 \in \trains \land \location.\train_1 =
+  \location.\train_2}{\train_1 = \train_2}
+  }
+  $
+  \Bvspace
+  $
+  \ubevent{\arrive}{\train}{\train \notin \trains \\ \Entry \notin \ran(\location) }{}{}{
+    \trains \bcmeq \trains \bunion \{\train\} \\
+    \location(\train) \bcmeq \Entry
+  }
+  $
+  \Bhspace
+  $ \ubevent{\depart}{\train}{ \train \in \trains \land
+    \location.\train = \Exit } { \train \in \trains \land
+    \location.\train = \Exit} {} {\trains \bcmeq \trains \setminus
+    \{\train\} \\ \location \bcmeq \{\train\} \domsub \location} $
+  \Bvspace
+    $ \ubevent{\moveout}{\train}{ \train \in \trains \land
+      \location.\train \in \PLATFORM \land \\
+      \Exit \notin \ran.\location
+    }{\train \in \trains \land \location.\train \in \PLATFORM} {\Exit
+      \notin \ran.\location} {\location.\train \bcmeq \Exit} $
+    \Bvspace
+  $
+  \ubevent{\movein}{\train}
+  {\train \in \trains \land \location.\train = \Entry \land
+    \qexists{p}{p \in \PLATFORM}{p \notin \ran.\location}
+  }
+  {\train \in \trains \land \location.\train = \Entry  \land     \qexists{p}{p \in \PLATFORM}{p \notin \ran.\location}}
+  {}
+  {\location \bcmsuch \qexists{p}{p \in \PLATFORM \setminus 
+    \ran.\location}{\location'
+    = \location \ovl \{\train \mapsto p\}}}
+  $
+  \Bvspace
+  $
+  \properties{
+    \Binv{prg2\_9}: & \tr \train \in \trains \land \location.\train =
+    \Entry \land \qforall{p}{p \in \PLATFORM}{p \in \ran.\location} \\
+    \Binv{un2\_8}: & \train \in \trains \land \location.\train =
+    \Entry \land \qforall{p}{p \in \PLATFORM}{p \in \ran.\location} \\
+    & \WIDE\un \train \in \trains \land \location.\train = \Entry
+    \land     \qexists{p}{p \in \PLATFORM}{p \notin \ran.\location} \\
+    \Bthm{prg2\_7}: & \train \in \trains \land \location.\train =
+    \Entry \land \qforall{p}{p \in \PLATFORM}{p \in \ran.\location} \\
+    & \WIDE\leadsto \train \in \trains \land \location.\train = \Entry
+    \land     \qexists{p}{p \in \PLATFORM}{p \notin \ran.\location} \\
+    \Bthm{prg2\_6}: & \train \in \trains \land \location.\train =
+    \Entry \\
+    & \WIDE\leadsto \train \in \trains \land \location.\train = \Entry
+    \land     \qexists{p}{p \in \PLATFORM}{p \notin \ran.\location} \\
+    \Binv{un2\_5}: & \train \in \trains \land \location.\train = \Entry
+    \land     \qexists{p}{p \in \PLATFORM}{p \notin \ran.\location} \\
+    & \Wide{\un} \spneg (\train \in \trains \land \location.\train =
+    \Entry) \\
+    \Binv{prg2\_4}: & \tr \Exit \in \ran.\location \\
+    \Bthm{prg2\_3}: & \one \leadsto \Exit \notin \ran.\location \\
+  }
+  $
+\end{Bcode}
+% Event \arrive is refined straightforward
+% \end{Bcode}
+
+Reasoning remarks
+\begin{center}
+  \begin{tabular}{|l|l|}
+    \hline
+    Consequence & Antecedents \\
+    \hline
+    Fine-schedule strengthening \moveout & \Bthm{prg2\_3} \\
+    \Bthm{prg2\_3} & \Binv{prg2\_4} ($\tr$ property) \\
+    \Binv{prg2\_4} & implemented by $\depart.(\location^{-1}.\Exit)$
+    (transient-rule) \\
+    Coarse-schedule replacing \movein & \Binv{un2\_5}, \Bthm{prg2\_6}
+    \\
+    \Bthm{prg2\_6} & \Bthm{prg2\_7} (Split-off-skip) \\
+    \Bthm{prg2\_7} & \Binv{un2\_8}, \Binv{prg2\_9} (ensure-rule) \\
+    \Binv{prg2\_9} & implemented by \moveout (transient-rule)
+    \hline
+  \end{tabular}
+\end{center}
+
+
+Finally we strengthen the guard of \movein and subsequently strengthen
+its coarse-schedule (see Figure~\ref{fig:2nd-ref}).  We apply
+Theorem~\ref{thm:ref-rep-crs} (coarse-schedule replacing) \movein.
+The detailed proofs is omitted here.
+
+\subsection{Third Refinement}
+\label{sec:third-refinement}
+
+\newBset{COLOR}
+\newBcst[GREEN]{GR}
+\newBcst[RED]{RD}
+\newBvrb[signal]{sgn}
+\newBevt[ctrlplf]{ctrl\_platform}
+\newBpar[platform]{p}
+
+In this refinement, we introduce the signals associated with different
+blocks within the network (\ref{asm:entry-signal},
+\ref{asm:platform-signal}, \ref{asm:obey-signal}, and
+\ref{asm:signal-to-red}).  Variable \signal is introduced to denote
+the value of the signal associated with different blocks together with
+the following invariants.  We focus on the controlling of the platform
+signals here.  In particular, invariants \Binv{inv3\_2} and
+\Binv{inv3\_3} state that if a platform signal is green (\GREEN) then
+the exit block is free and the other platform signals are red (\RED).
+  \begin{Bcode}[\footnotesize]
+    $ \invariants[false]{ \Binv{inv3\_1}: & \signal \in \{\Entry\}
+      \bunion \PLATFORM \tfun
+      \COLOR \\
+      \Binv{inv3\_2}: & \qforall{p}{p \in \PLATFORM \land \signal.p =
+        \GREEN}{\Exit \notin \ran.\location} \\
+      \Binv{inv3\_3}: & \qforall{p,q}{p, q \in \PLATFORM \land
+        \signal.p = \signal.q = \GREEN}{p = q} } $
+  \end{Bcode}
+
+We refine the \moveout event using the platform signal as shown in Figure~\ref{fig:3rd-ref}.
+\begin{figure}[!htbp]
+  \centering
+  \begin{Bcode}[\scriptsize]
+    $
+    \ubevent{\moveout}{\train}{
+      \train \in \trains \land
+      \location.\train \in \PLATFORM \land \\
+      \signal.(\location.\train) = \GREEN
+    }{\train \in \trains \land \location.train \in \PLATFORM \land \\
+    \signal.(\location.\train) = \GREEN}{}{\location.\train \bcmeq
+    \Exit \\
+    \signal.(\location.\train) \bcmeq \RED
+  }
+  $
+  \Bhspace
+  $
+  \ubevent{\ctrlplf}{\platform}{
+    \platform \in \PLATFORM \land
+    \platform \in \ran.\location \land
+    \Exit \notin \ran.\location \land \\
+    \qforall{q}{q \in \PLATFORM}{\signal.q = \RED}
+  }
+  {
+    \platform \in \PLATFORM \land
+    \platform \in \ran.\location \land
+    \signal.\platform = \RED
+  }
+  {
+    \Exit \notin \ran(\location) \land
+    \qforall{q}{q \in \PLATFORM \land q \neq \platform}{\signal.q = \RED}
+  }
+  {\signal.\platform \bcmeq \GREEN}
+  $
+\end{Bcode}
+\vspace{-4ex}
+\caption{Events of the third refinement}
+\label{fig:3rd-ref}
+\end{figure}
+The refinement of \moveout is justified by applying
+Theorem~\ref{thm:ref-rep-crs} (coarse-schedule replacing) and
+Theorem~\ref{thm:remove-fns} (fine-schedule removing).  In particular,
+replacing the coarse-schedule requires the following progress
+property.
+\begin{equation}
+  \label{eq:99}
+  \train \in \trains \land \location.\train \in \PLATFORM
+  \wide\leadsto \train \in \trains \land \location.\train \in
+  \PLATFORM \land \signal.(\location.\train) = \GREEN
+  \tag{\Binv{prg3\_4}}
+\end{equation}
+which can be implemented by
+\begin{equation}
+  \label{eq:35}
+  \tr \train \in \trains \land \location.\train \in
+  \PLATFORM \land \signal.(\location.\train) = \RED
+  \tag{\Binv{prg3\_5}}
+\end{equation}
+
+In order to satisfy \ref{eq:35}, we introduce a new event
+\ctrlplf for the controller to change a platform signal to green according to
+Theorem~\ref{thm:transient} (see Figure~\ref{fig:3rd-ref}).
+% \begin{Bcode}[\footnotesize]
+%   $
+%   \ubevent{\ctrlplf}{\platform}{
+%     \platform \in \PLATFORM \land
+%     \platform \in \ran.\location \land
+%     \Exit \notin \ran.\location \land
+%     \qforall{q}{q \in \PLATFORM}{\signal.q = \RED}
+%   }
+%   {
+%     \platform \in \PLATFORM \land
+%     \platform \in \ran.\location \land
+%     \signal.\platform = \RED
+%   }
+%   {
+%     \Exit \notin \ran(\location) \land
+%     \qforall{q}{q \in \PLATFORM \land q \neq \platform}{\signal.q = \RED}
+%   }
+%   {\signal.\platform \bcmeq \GREEN}
+%   $
+% \end{Bcode}
+This event \ctrlplf is a specification for the system to control the
+platform signals preserving both safety and liveness properties of the
+systems.  In particular, the scheduling information states that if (1)
+a platform is occupied and the platform signal is \RED infinitely long
+and (2) the exit block is unoccupied and the other platform signals
+are all \RED infinitely often, then the system should eventually set
+this platform signal to \GREEN.
+
+The refinement of event \movein and how the entry signal is controlled
+is similar and omitted.
+
+\end{document}
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

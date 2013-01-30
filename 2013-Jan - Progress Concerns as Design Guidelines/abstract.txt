@@ -1,0 +1,7 @@
+Event-B and UNITY are two methods that brought something new to the field of design of concurrent programs. UNITY presents a temporal logic as a means of specifying programs together with simple rules for mapping temporal properties to programs and techniques for refining specification. On the other hand, Event-B provides a unification of the notion of program and specification and defines a refinement order that preserves safety properties but not liveness.  In both Event-B and UNITY, the notion of program is taken to be a transition system with state variables.
+
+We introduce Unit-B as a unification of Event-B and UNITY and, in the process, introduce a treatment of strong fairness which is amenable to refinement. The result is a notion of specification which subsumes that of program and for which refinement preserves both liveness and safety. The properties of the semantics of Unit-B are formalized and proved using R.M. Dijkstra's computation calculus.
+
+From a methodological point of view, in a development in Unit-B, unlike developments in Event-B, it is not necessary to postpone the proof of liveness properties until the last refinement; they can be introduced when they make most sense, exactly as is the case for safety properties in Event-B.  Furthermore, we argue that the liveness aspect of a specification can dictate the direction that a design should take and that a liveness preserving refinement order now allows us to take advantage of that fact.
+
+5:37 PM
