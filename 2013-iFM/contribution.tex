@@ -42,7 +42,7 @@ deterministic ($\bcmeq$) or non-deterministic ($\bcmsuch$).
 %   \ubeventinline{evt}{}{}{\csched.v}{\fsched.v}{\assignment.v.v'}~,\label{eq:ubevent-no-grd}
 % \end{equation}
 % for events without parameters and guard (the guard is $\one$).
-An event $\evt$ with parameters $t$ is stands for multiple events.
+An event $\evt$ with parameters $t$ stands for multiple events.
 Each corresponds to several non-parameterised events $\evt.t$, one for
 each possible value of the parameter $t$.  An event is said to be
 enabled when the guard $\guard$ holds.  The scheduling assumption of
@@ -64,7 +64,7 @@ initialisation state predicate \init constraining the initial value of
 the state variables.
 %A special event containing only action is used as the initialisation
 %of the model.  
-All computations of a model starts from a state satisfying the
+All computations of a model start from a state satisfying the
 initialisation and are such that, at every step, either one of its
 enabled events occurs or the state is unchanged, and each computation
 satisfies the scheduling assumptions of all events.
@@ -149,7 +149,7 @@ Safety properties of the model are captured by \emph{invariance} properties
 
 An invariant $I(v)$ is a state-properties that hold at every reachable state of the model.
 In order to prove that $I(v)$ is an invariant of $\Mch$,
-we prove that $\ew{\execution.\Mch. \wide{\limp} \G \initially \! I}$.
+we prove that $\ew{\execution.\Mch \wide{\limp} \G \initially \! I}$.
 In particular, we rely solely on the safety part of the model to prove
 invariance properties, i.e., we prove $\ew{\safety.\Mch \wide{\limp} \G
   \initially \! I}$.  This leads to the well-know invariance principle.
@@ -489,7 +489,7 @@ a transient property.
 \begin{proof}[Sketch]
   $p \un q$ ensures that if $p$ holds then it will hold for infinitely long or
   eventually $q$ holds.  If $q$ holds eventually then we have $p
-  \leadsto q)$.  Otherwise, if $p$ holds for infinitely long and $\spneg q$
+  \leadsto q$.  Otherwise, if $p$ holds for infinitely long and $\spneg q$
   also hold for infinitely long, we have a contradiction, since $\tr p \land
   \spneg q$ ensures that eventually $p \land \spneg q$ will be
   falsified.  As a result, if $p$ holds for infinitely long then eventually
