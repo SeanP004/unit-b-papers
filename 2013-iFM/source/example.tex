@@ -8,6 +8,7 @@ We illustrate our method by applying it to design a system controlling
 trains at a station.  We first present some informal requirements of
 the system.
 
+\marginpar{Son: Cite the Event-B Workshop paper}
 \subsection{Requirements}
 \label{sec:requirements}
 
@@ -22,8 +23,8 @@ the exiting block and leaving the network.
   \label{fig:sgnctrl}
 \end{wrapfigure}
 \begin{requirements}
-  \asm{asm:topology}{There is an entry block, many platform blocks and
-    an exiting block, connected together as shown in
+  \asm{asm:topology}{There is one entry block, many platform blocks and
+    one exiting block, connected together as shown in
     Figure~\ref{fig:sgnctrl}.}
   \asm{asm:movement}{Trains travel in one direction from the entry block
     to the exiting block via a platform block}
@@ -368,6 +369,7 @@ $\train$, if $\train$ stays in a platform for infinitely long and the
 exit block is free infinitely often, then $\train$ can move out of the
 platform.
 
+\marginpar{Simon: Rephrase this paragraph if possible}
 We want to highlight the fact that \moveout has both a coarse- and a
 fine-schedule.  In particular, using only either weak- or
 strong-fairness would be unsatisfactory.  Weak-fairness

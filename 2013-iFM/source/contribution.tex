@@ -44,7 +44,8 @@ deterministic ($\bcmeq$) or non-deterministic ($\bcmsuch$).
 % for events without parameters and guard (the guard is $\one$).
 An event $\evt$ with parameters $t$ stands for multiple events.
 Each corresponds to several non-parameterised events $\evt.t$, one for
-each possible value of the parameter $t$.  An event is said to be
+each possible value of the parameter $t$.  Here $\guard$, $\csched$,
+$\fsched$ are state predicates.  An event is said to be
 enabled when the guard $\guard$ holds.  The scheduling assumption of
 the event is represented by $\csched$ and $\fsched$ as follows: if
 $\csched$ holds for infinitely long and $\fsched$ holds infinitely
