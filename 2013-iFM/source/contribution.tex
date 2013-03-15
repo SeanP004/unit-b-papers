@@ -25,7 +25,7 @@ an \eventB-similar syntax, a \unitb event has the following form:
   \small
   \ubeventinline{\evt}{t}{\guard.t.v}{\csched.t.v}{\fsched.t.v}{\assignment.t.v.v'}~,\label{eq:ubevent}
 \end{equation}
-where $t$ is the parameters, $\guard$ is the \emph{guard}, $\csched$
+where $t$ are the parameters, $\guard$ is the \emph{guard}, $\csched$
 is the \emph{coarse-schedule}, $\fsched$ is the \emph{fine-schedule},
 and $\assignment$ is the \emph{action} changing state variables $v$.
 The action is usually made up of several \emph{assignments}, either
@@ -152,7 +152,7 @@ In order to prove that $I(v)$ is an invariant of $\Mch$,
 we prove that $\ew{\execution.\Mch \wide{\limp} \G \initially \! I}$.
 In particular, we rely solely on the safety part of the model to prove
 invariance properties, i.e., we prove $\ew{\safety.\Mch \wide{\limp} \G
-  \initially \! I}$.  This leads to the well-know invariance principle.
+  \initially \! I}$.  This leads to the well-known invariance principle.
 \begin{equation}
   \begin{array}{ll}
     & \ew{\init \limp I} \wide{\land} 
