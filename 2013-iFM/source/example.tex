@@ -22,8 +22,8 @@ the exiting block and leaving the network.
   \label{fig:sgnctrl}
 \end{wrapfigure}
 \begin{requirements}
-  \asm{asm:topology}{There are one entry block, many platform blocks and
-    one exiting block, connected together as shown in
+  \asm{asm:topology}{There is an entry block, many platform blocks and
+    an exiting block, connected together as shown in
     Figure~\ref{fig:sgnctrl}.}
   \asm{asm:movement}{Trains travel in one direction from the entry block
     to the exiting block via a platform block}
@@ -31,11 +31,11 @@ the exiting block and leaving the network.
 
 In order to control the trains at the station, signals are positioned
 at the end of the entry block and each platform block.  The
-train conductors are assumed to obey the signals.
+train drivers are assumed to obey the signals.
 \begin{requirements}
   \asm{asm:entry-signal}{There is a light signal at the end of
     the entry block}\ReqSpacing
-  \asm{asm:platform-signal}{There are a light signal at the end of each
+  \asm{asm:platform-signal}{There is a light signal at the end of each
     platform block}\ReqSpacing
   \asm{asm:obey-signal}{Trains obey the light signals} \ReqSpacing
   \asm{asm:signal-to-red}{Signals change from green to red
@@ -106,7 +106,7 @@ the station and a train leaving the station as below.
 
 The requirement \ref{live:train-leave} can be specified as a progress
 property \Binv{prg0\_1}: $ \train \in \trains \leadsto t \notin
-\trains$.  According to \eqref{eq:trans-prop}), \Binv{prg0\_1} is
+\trains$.  According to \eqref{eq:trans-prop}, \Binv{prg0\_1} is
 equivalent to \Binv{prg0\_2}: $\tr \train \in \trains$.  In order to
 implement this transient property, we rely on
 Theorem~\ref{thm:transient} and add scheduling information for event
