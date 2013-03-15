@@ -52,7 +52,7 @@ often then the event is carried out infinitely often.  An event
 without any scheduling assumption will have its coarse-schedule
 $\csched$ equal to $\cfalse$.  An event having only the
 coarse-schedule $\csched$ will have the fine-schedule to be $\one$.
-Vice versa, if an event having only the fine-schedule $\fsched$ will
+Vice versa, an event having only the fine-schedule $\fsched$ will
 have the coarse-schedule to be $\one$.%
 % \todo{Son: (to Simon) Please make sure this convention makes sense. It
 % is different from your thesis.}%
@@ -298,8 +298,7 @@ predicates $p$, $q$, and $r$, we have:
 % \todo{Son: (to Simon) Think about the name for
 %   \eqref{eq:37}}
 
-The main tool for reasoning about progress properties in \unitb is
-by using the \emph{transient operator} $\tr$. 
+The main tool for reasoning about progress properties in \unitb is the \emph{transient operator} $\tr$. 
 \begin{Definition}[$\tr$ operator] For all state predicate $p$, $\ew{\tr p \Wide{\eqv} \G \F \, ;\initially\! \spneg p}$.
 %  \begin{equation}
 %    \ew{\tr p \Wide{\eqv} \G \F \, ;\initially\! \spneg p}~.\label{eq:transient}
