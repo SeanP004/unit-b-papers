@@ -366,28 +366,34 @@ guard.  In particular, we add (strengthen) the fine-schedule of
 \end{figure}
 The scheduling information for \moveout states that for any train
 $\train$, if $\train$ stays in a platform for infinitely long and the
-exit block is free infinitely often, then $\train$ can move out of the
+exit block becomes free infinitely often, then $\train$ can move out of the
 platform.
 
 \marginpar{Simon: Rephrase this paragraph if possible}
 We want to highlight the fact that \moveout has both a coarse- and a
 fine-schedule.  In particular, using only either weak- or
-strong-fairness would be unsatisfactory.  Weak-fairness
-requires that the exit block to be free infinitely long in order for
+strong-fairness would be unsatisfactory.  
+
+Weak-fairness
+requires for the exit block to be remain free continuously in order for
 trains to move out.  This assumption is not met by the current system.
+
 Strong-fairness allows a train to leave if the train is present on the
-platform infinitely often.  This assumption is more flexible than we
-need in the sense that it allows behaviours where a train hops in/out
-of the platform infinitely often.
+platform intermittently.  This assumption is more flexible than we
+need since it allows behaviours where a train hops on and off
+the platform infinitely often. The price of that flexibility is to entangle 
+properties of the exit block with properties of trains: indeed, we would
+need not only to prove that the train will be on its platform and that 
+the exit block will become free but that both happen simultaneously
+infinitely often.
+
 %\todo{Son: (to SImon) We need to make this point clearer. What I want
 %  to focus here is that coarse-/fine-schedules are suitable
 %  specification rather than weak-/strong-fairness.}
-We relinquish this flexibility and are therefore capable of properly
-structuring our proof: on one hand, the train stays on its platform as
+We choose to relinquish this flexibility and are therefore capable of structuring
+our proof better: on one hand, the train stays on its platform as
 long as necessary; independently, the exit block becomes free
-infinitely many times. If we use strong fairness, both would have
-to become true infinitely many times and they would have to become
-true together.
+infinitely many times. 
 
 In order to prove the refinement of \moveout, we apply
 Theorem~\ref{thm:strengthen-fns} (fine-schedule strengthening), which
