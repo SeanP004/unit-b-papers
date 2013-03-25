@@ -479,16 +479,16 @@ We refine the \moveout event using the platform signal as shown in Figure~\ref{f
 The refinement of \moveout is justified by applying
 Theorem~\ref{thm:ref-rep-crs} (coarse-schedule replacing) and
 Theorem~\ref{thm:remove-fns} (fine-schedule removing).  In particular,
-replacing the coarse-schedule requires the following progress
-property.
-\begin{equation}
-  \label{eq:99}
-  \train \in \trains \land \location.\train \in \PLATFORM
-  \wide\leadsto \train \in \trains \land \location.\train \in
-  \PLATFORM \land \signal.(\location.\train) = \GREEN
-  \tag{\Binv{prg3\_4}}
-\end{equation}
-which can be implemented by
+replacing the coarse-schedule requires the following transient
+property
+% \begin{equation}
+%   \label{eq:99}
+%   \train \in \trains \land \location.\train \in \PLATFORM
+%   \wide\leadsto \train \in \trains \land \location.\train \in
+%   \PLATFORM \land \signal.(\location.\train) = \GREEN~,
+%   \tag{\Binv{prg3\_4}}
+% \end{equation}
+% which can be implemented by
 \begin{equation}
   \label{eq:35}
   \tr \train \in \trains \land \location.\train \in
@@ -526,7 +526,6 @@ a platform is occupied and the platform signal is \RED infinitely long
 and (2) the exit block is unoccupied and the other platform signals
 are all \RED infinitely often, then the system should eventually set
 this platform signal to \GREEN.
-
 The refinement of event \movein and how the entry signal is controlled
 is similar and omitted.
 
