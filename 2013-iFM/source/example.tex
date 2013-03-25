@@ -5,43 +5,44 @@
 \label{sec:example}
 
 We illustrate our method by applying it to design a system controlling
-trains at a station.  We first present some informal requirements of
-the system.
+trains at a
+station~\cite{hudon11:_devel_contr_system_guided_model_envir}.  We
+first present some informal requirements of the system.
 
-\marginpar{Son: Cite the Event-B Workshop paper}
 \subsection{Requirements}
 \label{sec:requirements}
 
-The network at the station contains an \emph{entry block}, several
-\emph{platform blocks} and an \emph{exiting block}, as seen in
-Figure~\ref{fig:sgnctrl}.  Trains arrive on the network at the entry
-block, then can move into one of the platform blocks before moving to
-the exiting block and leaving the network.
 \begin{wrapfigure}{r}{0.55\linewidth}
   \centering \input{tikz-sgnctrl}
   \caption{A signal control system}
   \label{fig:sgnctrl}
 \end{wrapfigure}
-\begin{requirements}
-  \asm{asm:topology}{There is one entry block, many platform blocks and
-    one exiting block, connected together as shown in
-    Figure~\ref{fig:sgnctrl}.}
-  \asm{asm:movement}{Trains travel in one direction from the entry block
-    to the exiting block via a platform block}
-\end{requirements}
 
+The network at the station contains an \emph{entry block}, several
+\emph{platform blocks} and an \emph{exiting block}, as seen in
+Figure~\ref{fig:sgnctrl}.  Trains arrive on the network at the entry
+block, then can move into one of the platform blocks before moving to
+the exiting block and leaving the network (see Figure~\ref{fig:sgnctrl}).
+% \begin{requirements}
+%   \asm{asm:topology}{There is one entry block, many platform blocks and
+%     one exiting block, connected together as shown in
+%     Figure~\ref{fig:sgnctrl}.}
+%   \asm{asm:movement}{Trains travel in one direction from the entry block
+%     to the exiting block via a platform block}
+% \end{requirements}
 In order to control the trains at the station, signals are positioned
 at the end of the entry block and each platform block.  The
-train drivers are assumed to obey the signals.
-\begin{requirements}
-  \asm{asm:entry-signal}{There is a light signal at the end of
-    the entry block}\ReqSpacing
-  \asm{asm:platform-signal}{There is a light signal at the end of each
-    platform block}\ReqSpacing
-  \asm{asm:obey-signal}{Trains obey the light signals} \ReqSpacing
-  \asm{asm:signal-to-red}{Signals change from green to red
-    automatically when a train passes by}
-\end{requirements}
+train drivers are assumed to obey the signals.  The signals are
+supposed to change from green to red automatically when a train passes by.
+% \begin{requirements}
+%   \asm{asm:entry-signal}{There is a light signal at the end of
+%     the entry block}\ReqSpacing
+%   \asm{asm:platform-signal}{There is a light signal at the end of each
+%     platform block}\ReqSpacing
+%   \asm{asm:obey-signal}{Trains obey the light signals} \ReqSpacing
+%   \asm{asm:signal-to-red}{Signals change from green to red
+%     automatically when a train passes by}
+% \end{requirements}
 
 The most important properties of the systems are that (1) there should be
 no collision between trains (\ref{saf:no-collision}), and (2) each train in the network eventually
@@ -53,15 +54,13 @@ leaves~(\ref{live:train-leave}).
 
 \paragraph{Refinement strategy} In the initial model, we abstractly
 model the trains in the network, focusing on~\ref{live:train-leave}.
-In the first refinement, we introduce the topology of the network
-(\ref{asm:topology}, \ref{asm:movement}).  We strengthen the model of
-the system, focusing on~\ref{saf:no-collision} in the second
-refinement.  In the third refinement, we introduce the signals and
-derive a specification for the controller that manages these signals
-(\ref{asm:entry-signal}, \ref{asm:platform-signal},
-\ref{asm:obey-signal}, and \ref{asm:signal-to-red}).  As one can see,
-the liveness requirement, i.e., \ref{live:train-leave}, is taken early
-in the development and acts as a guideline for designing the system.
+In the first refinement, we introduce the topology of the network.  We
+strengthen the model of the system, focusing on~\ref{saf:no-collision}
+in the second refinement.  In the third refinement, we introduce the
+signals and derive a specification for the controller that manages
+these signals.  As one can see, the liveness requirement, i.e.,
+\ref{live:train-leave}, is taken early in the development and acts as
+a guideline for designing the system.
 
 \subsection{Initial Model}
 \label{sec:initial-model}
@@ -168,23 +167,23 @@ in the network, constrained by invariant \invLocationType: $\location
 \begin{figure}[!hbtp]
   \centering
   \begin{Bcode}[\scriptsize]
-    $ \ubevent{\depart}{\train}{ \train \in \trains \land
-      \location.\train = \Exit } { \train \in \trains \land
+    $ \ubevent{\depart}{\train}{ \train \in \trains ~\land \\
+      \location.\train = \Exit } { \train \in \trains ~\land \\
       \location.\train = \Exit} {} {\trains \bcmeq \trains \setminus
       \{\train\} \\ \location \bcmeq \{\train\} \domsub \location} $
     \Bhspace[0.1em]
     $
   \ubevent{\moveout}{\train}
-  {\train \in \trains \land \location.\train \in \PLATFORM}
-  {\train \in \trains \land \location.\train \in \PLATFORM}
+  {\train \in \trains ~\land \\ \location.\train \in \PLATFORM}
+  {\train \in \trains ~\land \\ \location.\train \in \PLATFORM}
   {}
   {\location.\train \bcmeq \Exit}
   $
   \Bhspace[0.1em]
   $
   \ubevent{\movein}{\train}
-  {\train \in \trains \land \location.\train = \Entry}
-  {\train \in \trains \land \location.\train = \Entry}
+  {\train \in \trains ~\land \\ \location.\train = \Entry}
+  {\train \in \trains ~\land \\ \location.\train = \Entry}
   {}
   {\location \bcmsuch \qexists{p}{p \in \PLATFORM}{\location'
     = \location \ovl \{\train \mapsto p\}}}
@@ -304,9 +303,9 @@ the resulting transient property, i.e., $\tr \train \in \trains \land
 %   $
 % \end{Bcode}
 
-Currently, our model includes the requirements about the topology
-of the network and the possible movement of trains within the network,
-i.e., \ref{asm:topology} and \ref{asm:movement}.
+% Currently, our model includes the requirements about the topology
+% of the network and the possible movement of trains within the network,
+% i.e., \ref{asm:topology} and \ref{asm:movement}.
 
 \subsection{Second Refinement}
 \label{sec:second-refinement}
@@ -429,9 +428,7 @@ The detailed proof is omitted here.
 \newBpar[platform]{p}
 
 In this refinement, we introduce the signals associated with different
-blocks within the network (\ref{asm:entry-signal},
-\ref{asm:platform-signal}, \ref{asm:obey-signal}, and
-\ref{asm:signal-to-red}).  Variable \signal is introduced to denote
+blocks within the network.  Variable \signal is introduced to denote
 the value of the signal associated with different blocks together with
 the following invariants.  We focus on the controlling of the platform
 signals here.  In particular, invariants \Binv{inv3\_2} and
@@ -447,7 +444,6 @@ the exit block is free and the other platform signals are red (\RED).
         \signal.p = \signal.q = \GREEN}{p = q} } $
   \end{Bcode}
 
-We refine the \moveout event using the platform signal as shown in Figure~\ref{fig:3rd-ref}.
 \begin{figure}[!htbp]
   \centering
   \begin{Bcode}[\scriptsize]
@@ -486,6 +482,7 @@ We refine the \moveout event using the platform signal as shown in Figure~\ref{f
 \caption{Events of the third refinement}
 \label{fig:3rd-ref}
 \end{figure}
+We refine the \moveout event using the platform signal as shown in Figure~\ref{fig:3rd-ref}.
 The refinement of \moveout is justified by applying
 Theorem~\ref{thm:ref-rep-crs} (coarse-schedule replacing) and
 Theorem~\ref{thm:remove-fns} (fine-schedule removing).  In particular,
@@ -502,7 +499,7 @@ which can be implemented by
 \begin{equation}
   \label{eq:35}
   \tr \train \in \trains \land \location.\train \in
-  \PLATFORM \land \signal.(\location.\train) = \RED
+  \PLATFORM \land \signal.(\location.\train) = \RED~.
   \tag{\Binv{prg3\_5}}
 \end{equation}
 
