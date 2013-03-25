@@ -44,7 +44,7 @@ supposed to change from green to red automatically when a train passes by.
 %     automatically when a train passes by}
 % \end{requirements}
 
-The most important properties of the systems are that (1) there should be
+The most important properties of the system are that (1) there should be
 no collision between trains (\ref{saf:no-collision}), and (2) each train in the network eventually
 leaves~(\ref{live:train-leave}).
 \begin{requirements}
@@ -58,9 +58,10 @@ In the first refinement, we introduce the topology of the network.  We
 strengthen the model of the system, focusing on~\ref{saf:no-collision}
 in the second refinement.  In the third refinement, we introduce the
 signals and derive a specification for the controller that manages
-these signals.  As one can see, the liveness requirement, i.e.,
-\ref{live:train-leave}, is taken early in the development and acts as
-a guideline for designing the system.
+these signals.
+% As one can see, the liveness requirement, i.e.,
+% \ref{live:train-leave}, is taken early in the development and acts as
+% a guideline for designing the system.
 
 \subsection{Initial Model}
 \label{sec:initial-model}
@@ -164,6 +165,23 @@ in the network, constrained by invariant \invLocationType: $\location
 %   $
 % \end{Bcode}
 
+For event \depart, we strengthen the guard to state that a train can
+only leave from the exit block.  Subsequently, in order to make sure
+that the schedule is stronger than the guard~(condition
+\eqref{eq:fis}), we need to strengthen the coarse-schedule
+accordingly (see Figure~\ref{fig:1st-ref}).
+In order to prove the refinement of \depart, we apply
+Theorem~\ref{thm:ref-rep-crs} (coarse-schedule replacing).  In
+particular we need to prove the following conditions:
+\begin{gather}
+  \train \in \trains ~\leadsto~ \train \in \trains
+  \land \location.\train = \Exit \label{eq:33}
+  \tag{\Binv{prg1\_1}} \\
+  \train \in \trains \land \location.\train =
+    \Exit ~\un~ \spneg (\train \in \trains) \label{eq:34}
+  \tag{\Binv{un1\_2}}
+\end{gather}
+
 \begin{figure}[!hbtp]
   \centering
   \begin{Bcode}[\scriptsize]
@@ -193,24 +211,8 @@ in the network, constrained by invariant \invLocationType: $\location
   \caption{Events of the first refinement}
   \label{fig:1st-ref}
 \end{figure}
-For event \depart, we strengthen the guard to state that a train can
-only leave from the exit block.  Subsequently, in order to make sure
-that the schedule is stronger than the guard~(condition
-\eqref{eq:fis}), we need to strengthen the coarse-schedule
-accordingly (see Figure~\ref{fig:1st-ref}).
-In order to prove the refinement of \depart, we apply
-Theorem~\ref{thm:ref-rep-crs} (coarse-schedule replacing).  In
-particular we need to prove the following conditions:
-\begin{gather}
-  \train \in \trains ~\leadsto~ \train \in \trains
-  \land \location.\train = \Exit \label{eq:33}
-  \tag{\Binv{prg1\_1}} \\
-  \train \in \trains \land \location.\train =
-    \Exit ~\un~ \spneg (\train \in \trains) \label{eq:34}
-  \tag{\Binv{un1\_2}}
-\end{gather}
 
-From now on, we focus on reasoning about progress properties, e.g,
+From now on, we focus on reasoning about progress properties, e.g.,
 \ref{eq:33}, omitting the reasoning about unless properties, e.g.,
 \ref{eq:34}.  The readers should be convinced that using
 Theorem~\ref{thm:unless}, these unless properties are valid for our
@@ -400,7 +402,7 @@ Property
 transient rule (Theorem~\ref{thm:transient}) using event \depart where
 the value for the parameter $\train$ is given by
 $\location^{-1}.\Exit$, i.e., the train at the exit block.  The
-proofs of conditions~\ref{eq:SCH}, \ref{eq:OP}, and \ref{eq:NEG} are
+proofs of conditions~\eqref{eq:SCH}, \eqref{eq:OP}, and \eqref{eq:NEG} are
 straight-forward.
 
 Finally we strengthen the guard of \movein and subsequently strengthen
@@ -519,7 +521,7 @@ Theorem~\ref{thm:transient} (see Figure~\ref{fig:3rd-ref}).
 % \end{Bcode}
 This event \ctrlplf is a specification for the system to control the
 platform signals preserving both safety and liveness properties of the
-systems.  In particular, the scheduling information states that if (1)
+system.  In particular, the scheduling information states that if (1)
 a platform is occupied and the platform signal is \RED infinitely long
 and (2) the exit block is unoccupied and the other platform signals
 are all \RED infinitely often, then the system should eventually set
