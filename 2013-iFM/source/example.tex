@@ -167,23 +167,23 @@ in the network, constrained by invariant \invLocationType: $\location
 \begin{figure}[!hbtp]
   \centering
   \begin{Bcode}[\scriptsize]
-    $ \ubevent{\depart}{\train}{ \train \in \trains ~\land \\
-      \location.\train = \Exit } { \train \in \trains ~\land \\
+    $ \ubevent{\depart}{\train}{ \train \in \trains \land
+      \location.\train = \Exit } { \train \in \trains \land
       \location.\train = \Exit} {} {\trains \bcmeq \trains \setminus
       \{\train\} \\ \location \bcmeq \{\train\} \domsub \location} $
     \Bhspace[0.1em]
     $
   \ubevent{\moveout}{\train}
-  {\train \in \trains ~\land \\ \location.\train \in \PLATFORM}
-  {\train \in \trains ~\land \\ \location.\train \in \PLATFORM}
+  {\train \in \trains \land \location.\train \in \PLATFORM}
+  {\train \in \trains \land \location.\train \in \PLATFORM}
   {}
   {\location.\train \bcmeq \Exit}
   $
   \Bhspace[0.1em]
   $
   \ubevent{\movein}{\train}
-  {\train \in \trains ~\land \\ \location.\train = \Entry}
-  {\train \in \trains ~\land \\ \location.\train = \Entry}
+  {\train \in \trains \land \location.\train = \Entry}
+  {\train \in \trains \land \location.\train = \Entry}
   {}
   {\location \bcmsuch \qexists{p}{p \in \PLATFORM}{\location'
     = \location \ovl \{\train \mapsto p\}}}
@@ -201,16 +201,14 @@ accordingly (see Figure~\ref{fig:1st-ref}).
 In order to prove the refinement of \depart, we apply
 Theorem~\ref{thm:ref-rep-crs} (coarse-schedule replacing).  In
 particular we need to prove the following conditions:
-\begin{equation}
+\begin{gather}
   \train \in \trains ~\leadsto~ \train \in \trains
-  \land \location.\train = \Exit\label{eq:33}
-  \tag{\Binv{prg1\_1}}
-\end{equation}
-\begin{equation}
+  \land \location.\train = \Exit \label{eq:33}
+  \tag{\Binv{prg1\_1}} \\
   \train \in \trains \land \location.\train =
-    \Exit ~\un~ \spneg (\train \in \trains)\label{eq:34}
+    \Exit ~\un~ \spneg (\train \in \trains) \label{eq:34}
   \tag{\Binv{un1\_2}}
-\end{equation}
+\end{gather}
 
 From now on, we focus on reasoning about progress properties, e.g,
 \ref{eq:33}, omitting the reasoning about unless properties, e.g.,
@@ -221,35 +219,31 @@ model.  We first apply \eqref{eq:37} to obtain $\train \in \trains
 \location.\train = \Exit$ and then apply the transitivity
 property~\eqref{eq:transitivity} of the leads-to operator to establish
 two progress properties \ref{eq:24} and \ref{eq:25} as follows.
-\begin{equation}
+\begin{gather}
   \label{eq:24}
   \train \in \trains \land \location.\train
   \neq \Exit ~\leadsto~ \train \in
   \trains \land \location.\train \in \PLATFORM
-  \tag{\Binv{prg1\_3}}
-\end{equation}
-\begin{equation}
+  \tag{\Binv{prg1\_3}}\\
   \label{eq:25}
   \train \in \trains \land \location.\train
   \in \PLATFORM ~\leadsto~ \train \in
   \trains \land \location.\train = \Exit
   \tag{\Binv{prg1\_4}}
-\end{equation}
+\end{gather}
 Consider \ref{eq:25}, we first apply the ensure-rule
 (Theorem~\ref{thm:ensure-rule}) to establish two properties (after
 simplification) as follows:
-\begin{equation}
+\begin{gather}
   \label{eq:27}
   \train \in \trains \land \location.\train \in \PLATFORM ~\un~
   \train \in \trains \land \location.\train = \Exit
-  \tag{\Binv{un1\_5}}
-\end{equation}
-\begin{equation}
+  \tag{\Binv{un1\_5}}\\
   \label{eq:28}
   \tr \train \in \trains \land \location.\train \in
     \PLATFORM
   \tag{\Binv{prg1\_6}}
-\end{equation}
+\end{gather}
 
 We apply Theorem~\ref{thm:transient} to implement \ref{eq:28} by the
 new event \moveout which has a weakly-fair scheduling (see
@@ -368,15 +362,12 @@ $\train$, if $\train$ stays in a platform for infinitely long and the
 exit block becomes free infinitely often, then $\train$ can move out of the
 platform.
 
-\marginpar{Simon: Rephrase this paragraph if possible}
+%\marginpar{Simon: Rephrase this paragraph if possible}
 We want to highlight the fact that \moveout has both a coarse- and a
 fine-schedule.  In particular, using only either weak- or
-strong-fairness would be unsatisfactory.  
-
-Weak-fairness
-requires for the exit block to be remain free continuously in order for
+strong-fairness would be unsatisfactory.
+Weak-fairness requires for the exit block to be remain free continuously in order for
 trains to move out.  This assumption is not met by the current system.
-
 Strong-fairness allows a train to leave if the train is present on the
 platform intermittently.  This assumption is more flexible than we
 need since it allows behaviours where a train hops on and off
@@ -429,11 +420,11 @@ The detailed proof is omitted here.
 
 In this refinement, we introduce the signals associated with different
 blocks within the network.  Variable \signal is introduced to denote
-the value of the signal associated with different blocks together with
-the following invariants.  We focus on the controlling of the platform
-signals here.  In particular, invariants \Binv{inv3\_2} and
-\Binv{inv3\_3} state that if a platform signal is green (\GREEN) then
-the exit block is free and the other platform signals are red (\RED).
+the value of the signals associated with different blocks.  We focus
+on the controlling of the platform signals here.  In particular,
+invariants \Binv{inv3\_2} and \Binv{inv3\_3} state that if a platform signal is
+green (\GREEN) then the exit block is free and the other platform
+signals are red (\RED).
   \begin{Bcode}[\footnotesize]
     $ \invariants[false]{ \Binv{inv3\_1}: & \signal \in \{\Entry\}
       \bunion \PLATFORM \tfun

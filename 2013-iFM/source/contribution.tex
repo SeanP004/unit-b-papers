@@ -158,7 +158,7 @@ invariance properties, i.e., we prove $\ew{\safety.\Mch \wide{\limp} \G
   \begin{array}{ll}
     & \ew{\init \limp I} \wide{\land} 
     \ew{\qforall{\evt, t}{\evt.t \in \Mch}{I \, ;  \action.(\evt.t) ~\limp~ \X;I}} \\
-    \implies &\\
+    \implies & \\
     & \ew{\safety.\Mch \limp \G \initially \! I}
   \end{array}
   \tag{INV}
@@ -233,12 +233,11 @@ Similarly, the standard \emph{strong-fairness} assumption for $\evt$
 (stating that if the event is enabled infinitely often then eventually
 it will be taken) can be formulated by using $\csched = \one$ and
 $\fsched = \guard$.
-\begin{equation}
-  \ew{ \wf.(\evt.t)  \2\equiv  \G (\G \bullet \guard \1\implies \F;\action.(\evt.t);\ctrue) }
-\end{equation}
-\begin{equation}
-  \ew{ \strf.(\evt.t)  \2\equiv  \G (\G \F;\bullet \guard \1\implies \F;\action.(\evt.t);\ctrue) }
-\end{equation}
+\begin{align}
+  \ew{ \wf.(\evt.t)  &\equiv \G (\G \bullet \guard \1\implies
+    \F;\action.(\evt.t);\ctrue) } \\
+  \ew{ \strf.(\evt.t)  &\equiv \G (\G \F;\bullet \guard \1\implies \F;\action.(\evt.t);\ctrue) }
+\end{align}
 
 
 
@@ -260,7 +259,7 @@ events, i.e.,
 \subsection{Progress Properties}
 \label{sec:progress-properties}
 Progress properties are of the form $p \leadsto q$, where
-$\leadsto$ is the leads-to operator and is defined as follows.
+$\leadsto$ is the leads-to operator.
 \begin{Definition}[$\leadsto$ operator] For all state predicates $p$
   and $q$,
   \begin{equation}
@@ -320,7 +319,7 @@ The attractiveness of properties such as $\tr p$ is that we can
   \label{thm:transient} Consider a \unitb model \Mch and a transient
   property $\tr p$. We have
   $\ew{\execution.\Mch \limp \tr p}$, if there exists an event 
-  \[\ubeventinline{\evt}{t}{\guard.t.v}{\csched.t.v}{\fsched.t.v}{\assignment.t.v.v'}~.\]
+  \[\ubeventinline{\evt}{t}{\guard.t.v}{\csched.t.v}{\fsched.t.v}{\assignment.t.v.v'}~,\]
   that is to say $\execution.\Mch$ entails:
   \begin{equation}
   	\label{eq:LIVE}
@@ -512,23 +511,19 @@ As a result of this definition, any property of \Mch is also satisfied
 by \cncMch.  Similarly to \eventB, refinement is considered in \unitb
 on a per event basis.  Consider an abstract event $\evt.t$ belong to
 \Mch and a concrete event $\cncevt.t$ belong to \cncMch as follows.
-\begin{equation}
-  \ubeventinline{\evt}{t}{\guard.t.v}{\csched.t.v}{\fsched.t.v}{\assignment.t.v.v'}\label{eq:absevt}
-\end{equation}
-\begin{equation}
-  \ubeventinline{\cncevt}{t}{\cncguard.t.v}{\cnccsched.t.v}{\cncfsched.t.v}{\cncassignment.t.v.v'}~.\label{eq:cncevt}
-\end{equation}
+\begin{gather*}
+  \ubeventinline{\evt}{t}{\guard.t.v}{\csched.t.v}{\fsched.t.v}{\assignment.t.v.v'}\label{eq:absevt} \\
+  \ubeventinline{\cncevt}{t}{\cncguard.t.v}{\cnccsched.t.v}{\cncfsched.t.v}{\cncassignment.t.v.v'}\label{eq:cncevt}
+\end{gather*}
 We have $\cncevt.t$ is a refinement of $\evt.t$ if
-\begin{equation}
+\begin{align}
   \label{eq:evt-safety}
-  \ew{\execution.\cncMch \limp (\action.(f.t) \limp \action.(e.t))}~, \textrm{and}
-  \tag{EVT-SAF}
-\end{equation}
-\begin{equation}
+  \ew{\execution.\cncMch ~\limp~ (\action.(f.t) \limp \action.(e.t))}~, \textrm{and}
+  \tag{EVT-SAF}\\
   \label{eq:evt-live}
-  \ew{\execution.\cncMch \limp (\schedule.(f.t) \limp \schedule.(e.t))}
+  \ew{\execution.\cncMch ~\limp~ (\schedule.(f.t) \limp \schedule.(e.t))}
   \tag{EVT-LIVE}
-\end{equation}
+\end{align}
 A similar rule is presented for the initialisation.  The proof that
 \cncMch refines \Mch (i.e., \eqref{eq:ref}) given conditions such as
 \eqref{eq:evt-safety} and \eqref{eq:evt-live} is left out.  A special
@@ -564,14 +559,12 @@ information: \emph{weakening the coarse-schedule}, \emph{replacing the
 \begin{Theorem}[Replacing the coarse-schedule]
   \label{thm:ref-rep-crs}
   Given $\cncfsched = \fsched$.  If
-  \begin{equation}
-    \ew{\execution.\cncMch \WIDE{\limp} \csched 
-         \wide\leadsto \cnccsched}\label{eq:crs}
-  \end{equation}
-  \begin{equation}
+  \begin{align}
+    \ew{\execution.\cncMch &\limp \csched 
+         \wide\leadsto \cnccsched}\label{eq:crs} \\
     \label{eq:unless}
-    \ew{\execution.\cncMch \WIDE{\limp} \cnccsched ~\un~ \spneg \csched}~,
-  \end{equation}
+    \ew{\execution.\cncMch &\limp \cnccsched ~\un~ \spneg \csched}~,
+  \end{align}
   then $\ew{\execution.\cncMch \limp (\schedule.(\cncevt.t) \limp \schedule.(\evt.t))}$
 \end{Theorem}
 \begin{proof}[Sketch]
@@ -585,15 +578,13 @@ information: \emph{weakening the coarse-schedule}, \emph{replacing the
 \begin{Theorem}[Strengthening the fine-schedule]
   \label{thm:strengthen-fns}
   Given $\cnccsched = \csched$. If
-  \begin{equation}
+  \begin{align}
     \label{eq:fns}
-    \ew{\execution.\cncMch \WIDE{\limp} \G \initially(\cncfsched \limp
-      \fsched)}~, \textrm{and}
-  \end{equation}
-  \begin{equation}
+    \ew{\execution.\cncMch \WIDE{&\limp} \G \initially(\cncfsched \limp
+      \fsched)}~, \textrm{and} \\
     \label{eq:lts}
-    \ew{\execution.\cncMch \WIDE{\limp} \fsched \wide\leadsto \cncfsched}
-  \end{equation}
+    \ew{\execution.\cncMch \WIDE{&\limp} \fsched \wide\leadsto \cncfsched}
+  \end{align}
   then $\ew{\execution.\cncMch \limp (\schedule.(\cncevt.t) \limp \schedule.(\evt.t))}$.
 \end{Theorem}
 \begin{proof}[Sketch] We can prove  
