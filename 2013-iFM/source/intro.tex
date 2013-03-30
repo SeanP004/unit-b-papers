@@ -35,43 +35,44 @@ system, we can make the design so safe that it becomes unusable.  It is
 hence our aim to design a refinement framework preserving both safety
 and liveness properties.
 
-There exists modelling methods that include the capability of reasoning
-about liveness properties, such as
-UNITY~\cite{DBLP:books/daglib/0067338}.  In UNITY, there is a clear
+Some modelling methods such as UNITY~\cite{DBLP:books/daglib/0067338}, 
+include the capability of reasoning about liveness properties.  In UNITY, there is a clear
 distinction between specifications (temporal properties) and programs
 (transition systems).  Refinement in \unity involves transforming
 specifications according to the \unity logic.  At the end of the
 refinement process, one obtains several temporal properties which then
-can be ``implemented'' using some program fragments according to
+can be implemented by some program fragments according to
 well-defined rules.  As a result, programs (transition systems) in
 \unity are not part of the design, they are the output of the
 refinement process.  A disadvantage of this approach is that the
 transformation of temporal properties can make the
 choice of refinements hard to understand.  In order to overcome 
-this limitation, one needs to unify the notion of specifications and 
-programs, allowing them to evolve together during refinement.
+this limitation, we unified the notion of specification and that of
+program, making smoother the transition from one to the other.
 
 %%%%% Contribution: Unit-B
 In this paper, we present a formal method, namely
 \unitb~\cite{thesis/hudon2011}, inspired by
 \unity~\cite{DBLP:books/daglib/0067338} and
-\eventB~\cite{DBLP:books/daglib/0024570}.  We borrow the idea of
-developing systems from \eventB, in which a series of models is
+\eventB~\cite{DBLP:books/daglib/0024570}.  We borrow the ideas of
+system development from \eventB, in which a series of models is
 constructed and linked by refinement relationships.  The temporal
 logic that we use to specify and to reason about progress properties
-is based on \unity.  The main attraction of our method is that it
+is based on \unity.  
+
+The main attraction of our method is that it
 incorporates the reasoning about safety and liveness properties within
-a single refinement framework.  A novelty of our approach is the
-introduction of coarse- and fine-schedules for events, a
-generalisation of the standard weak- and strong-fairness assumptions.
-This new notion allows us (1) to reason about the satisfiability of
+a single refinement framework.  Furthermore, our approach features the 
+novel notions of coarse- and fine-schedules, a generalisation of the 
+standard weak- and strong-fairness assumptions.
+They allow us (1) to reason about the satisfiability of
 progress properties by a given model, and (2) to refine a given model
-preserving liveness properties.  The benefit of \unitb is that
-liveness properties can be introduced at any stage (ideally as early
-as possible) during the development process.  Subsequently, it rules
-out any design that is too conservative, often even justifies many
+while preserving liveness properties.  
+This makes it possible in \unitb to introduce liveness properties at any stage of 
+the development process. Subsequently, not only does it rule
+out any design that would be too conservative, but it also justifies
 design decisions.  As a result, liveness properties, in particular
-progress properties, can act as a design guideline for developing
+progress properties, act as a design guideline for developing
 systems.
 
 We give a semantics for \unitb models and their properties using
