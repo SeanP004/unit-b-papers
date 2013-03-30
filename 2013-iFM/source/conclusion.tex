@@ -14,13 +14,13 @@ system.
 
 A key observation in \unitb is the role of event scheduling regarding
 liveness properties being similar to the role of guards regarding safety
-properties.  Guards prevents events to occur in some unsafe state such
-that safety properties cannot be violated.  Schedules ensure event
-occurrences such that liveness properties can be satisfied.  Another
+properties.  Guards prevent events from occurring in some unsafe state so
+that safety properties won't be violated; similarly, schedules ensure the
+occurrence of events in order to satisfy liveness properties.  Another
 key aspect of \unitb is the role of progress properties during
 refinement.  Often, to ensure the validity of a refinement, one needs
 to prove some progress properties which (eventually) can be
-``implemented'' (satisfied) by some scheduled events.
+implemented (satisfied) by some scheduled events.
 
 \paragraph{Related work}
 \input{rel-work}
