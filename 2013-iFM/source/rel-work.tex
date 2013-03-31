@@ -6,9 +6,9 @@
 % Our \unitb method is inspired by \eventB and \unity.  We borrow the
 % idea of refining specifications (transition systems) from \eventB and
 % extending it to address liveness properties.  
-The difference between \unitb and \eventB is in the scheduling
+\unitb and \eventB differ mainly in the scheduling
 assumptions.  In \eventB, event executions are assumed to
-satisfy the following \emph{minimal progress} condition: as long
+satisfy the \emph{minimal progress} condition: as long
 as there are events that are enabled, one will be chosen non-
 deterministically. %
 %\todo{Son: (to Simon) Check the definition of minimal progress}%
@@ -51,14 +51,14 @@ complicated.
 %
 %%%%% TLA+
 TLA+\cite{DBLP_books_aw_Lamport2002} is another formal method based on
-refinement supporting liveness properties.  The
+refinement and which supports liveness properties.  The
 execution of a TLA+ model is also captured as a formula with safety
 and liveness sub-formulae.  However, refinement of the liveness part
 in TLA+ involves calculating explicitly the fairness assumptions of the
-abstract and concrete models.  This is not practical in our
-opinion for developing realistic systems in general.  The
-lack of practical rules for refining the liveness part in TLA+ might be
-rooted in the view of the author of TLA+ concerning the
+abstract and concrete models.  In our opinion, this is not practical for 
+developing realistic systems.  The
+lack of practical rules for refining the liveness part in TLA+ might 
+stem from the view of the author of TLA+ concerning the
 \emph{unimportance of liveness}~\cite[Chapter
 8]{DBLP_books_aw_Lamport2002}.  In our opinion, liveness
 properties are as important as safety properties to design

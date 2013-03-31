@@ -472,8 +472,8 @@ often we design $\csched$ such that it is the same as $p$ and
 $\fsched$ is $\one$ (i.e., omitting $\fsched$); as a result,
 conditions \eqref{eq:SCH} and \eqref{eq:OP} are trivial.  Condition
 \eqref{eq:NEG} can take into account any invariance property $I$ and
-can be stated as $\ew{I \land p \land \csched \land \fsched;
-  \action.(\evt.t) \limp \X; \spneg p}$.
+can be stated as $\ew{(I \land p \land \csched \land \fsched)\; ;
+  \action.(\evt.t) ~\limp~ \X; \spneg p}$.
 
 In general, progress properties can be proved using the following
 \emph{ensure-rule}.  The rule relies on proving an unless property and
@@ -529,7 +529,8 @@ A similar rule is presented for the initialisation.  The proof that
 \eqref{eq:evt-safety} and \eqref{eq:evt-live} is left out.  A special
 case of event refinement is when the concrete event \cncevt is a new
 event.  In this case, \cncevt is proved to be a refinement of a special
-\SKIP{} event which is unscheduled and does not change any variables.
+\SKIP{} event which is unscheduled and does not change any abstract
+variables.
 
 Condition \eqref{eq:evt-safety} leads to similar proof obligations in
 \eventB such as \emph{guard strengthening} and \emph{simulation}.  We
@@ -572,7 +573,8 @@ information: \emph{weakening the coarse-schedule}, \emph{replacing the
   then eventually $\cnccsched$ holds and it will hold for at least as long as $\csched$
   As a result, if
   $\csched$ holds for infinitely long, $\cnccsched$ also holds for infinitely long.  Hence
-  the schedule for \cncevt is stronger than that of \evt.
+  the new schedule ensures that \cncevt occurs at least on those cases where \evt has to 
+  occur.
 \end{proof}
 
 \begin{Theorem}[Strengthening the fine-schedule]
