@@ -104,7 +104,7 @@ In the course of reasoning using computation calculus, we make use of
 the distinction between infinite (``eternal'') and finite
 computations.  Two constants $\E, \F \in \CPred$ have been defined for
 this purpose. 
-\begin{Definition}[Eternal and Finite Computations] For any predicate $s$,\\
+\begin{Definition}[Eternal and Finite Computations] For any predicate $s$,\\[-2ex]
   \begin{minipage}{0.4\linewidth}
     \begin{eqnarray}
       \E & = & \ctrue;\cfalse \label{eq:comp-eternal} \\
@@ -126,28 +126,35 @@ as the dual of the ``eventually'' operator.
   $\G s = \neg(\F;\neg s)$, for any predicate $s$
 \end{Definition}
 Important properties of $\G$ are that it is strengthening and
-monotonic.  For any predicates $s$ and $t$, we have:
+monotonic.  For any predicates $s$ and $t$, we have: 
+\begin{align}
+  \label{eq:g-strengthen}
+  \ew{\G s &\limp s}~, \\
+  \label{eq:g-monotonic}
+  \ew{s \limp t} \Wide{&\limp} \ew{\G s \limp \G t}~, \\ 
+  \ew{ \G (s \limp t) \Wide{&\limp} (\G s \limp \G t) }~.
+\end{align}
 
-  \begin{minipage}{0.3\linewidth}
-	\begin{align}
-	  \label{eq:g-strengthen}
-	  \ew{\G s \limp s}~, \\
-	  \nonumber
-	\end{align}
-  \end{minipage}
-  \hfill
-  \begin{minipage}{0.5\linewidth}
-    \begin{align}
-      \label{eq:g-monotonic}
-      \ew{s \limp t} \Wide{&\limp} \ew{\G s \limp \G t}~, \\ 
-	\ew{ \G (s \limp t) &\Wide{\limp} (\G s \limp \G t) }~.
-    \end{align}
-  \end{minipage}
+  % \begin{minipage}{0.3\linewidth}
+  %       \begin{align}
+  %         \label{eq:g-strengthen}
+  %         \ew{\G s \limp s}~, \\
+  %         \nonumber
+  %       \end{align}
+  % \end{minipage}
+  % \hfill
+  % \begin{minipage}{0.5\linewidth}
+  %   \begin{align}
+  %     \label{eq:g-monotonic}
+  %     \ew{s \limp t} \Wide{&\limp} \ew{\G s \limp \G t}~, \\ 
+  %       \ew{ \G (s \limp t) &\Wide{\limp} (\G s \limp \G t) }~.
+  %   \end{align}
+  % \end{minipage}
 %\begin{equation}
 %	% \text{monotonicity with \textbf{G}}
 %\end{equation}
 
-A constant $\one$ is defined as (left- and right-) neutral element for
+A constant $\one$ is defined as the (left- and right-) neutral element for
 sequential composition.
 \begin{Definition}[Constant $\one$] For any computation $\tau$, $\one.\tau  \Wide{\eqv}  \size \tau = 1$
 \end{Definition}

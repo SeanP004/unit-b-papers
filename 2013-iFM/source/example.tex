@@ -22,7 +22,7 @@ The network at the station contains an \emph{entry block}, several
 \emph{platform blocks} and an \emph{exiting block}, as seen in
 Figure~\ref{fig:sgnctrl}.  Trains arrive on the network at the entry
 block, then can move into one of the platform blocks before moving to
-the exiting block and leaving the network (see Figure~\ref{fig:sgnctrl}).
+the exiting block and leaving the network.
 % \begin{requirements}
 %   \asm{asm:topology}{There is one entry block, many platform blocks and
 %     one exiting block, connected together as shown in
@@ -365,8 +365,8 @@ exit block becomes free infinitely often, then $\train$ can move out of the
 platform.
 
 %\marginpar{Simon: Rephrase this paragraph if possible}
-We want to highlight the fact that \moveout has both a coarse- and a
-fine-schedule.  In particular, using only either weak- or
+We want to highlight the fact that \moveout has both coarse- and
+fine-schedules.  In particular, using only either weak- or
 strong-fairness would be unsatisfactory.
 Weak-fairness requires for the exit block to be remain free continuously in order for
 trains to move out.  This assumption is not met by the current system.

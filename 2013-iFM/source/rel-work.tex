@@ -9,8 +9,7 @@
 \unitb and \eventB differ mainly in the scheduling
 assumptions.  In \eventB, event executions are assumed to
 satisfy the \emph{minimal progress} condition: as long
-as there are events that are enabled, one will be chosen non-
-deterministically. %
+as there are some enabled events, one of them will be executed non-deterministically. %
 %\todo{Son: (to Simon) Check the definition of minimal progress}%
 Given this assumption, certain liveness properties can be proved
 for \eventB models such as \emph{progress} and
@@ -18,7 +17,7 @@ for \eventB models such as \emph{progress} and
 However, this work does not discuss how the refinement notion can be
 adapted to preserve liveness properties.  Moreover, the
 minimum progress assumption is often either too weak to prove
-liveness properties or, when it's not, make the proofs needlessly 
+liveness properties or, when it is not, make the proofs needlessly 
 complicated.
 
 %   Often, one needs to have stronger assumptions
@@ -51,7 +50,7 @@ complicated.
 %
 %%%%% TLA+
 TLA+\cite{DBLP_books_aw_Lamport2002} is another formal method based on
-refinement and which supports liveness properties.  The
+refinement supporting liveness properties.  The
 execution of a TLA+ model is also captured as a formula with safety
 and liveness sub-formulae.  However, refinement of the liveness part
 in TLA+ involves calculating explicitly the fairness assumptions of the

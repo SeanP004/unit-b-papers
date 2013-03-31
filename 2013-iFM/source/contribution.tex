@@ -16,7 +16,7 @@ unifying the notions of programs and specifications, allowing
 refinement of programs.  
 
 \subsection{Syntax}
-Similar to \eventB, in \unitb systems are modelled by a transition system,
+Similar to \eventB, a \unitb system is modelled by a transition system,
 where the state space is captured by variables $v$ and the transitions are
 modelled by guarded events.  Furthermore, \unitb has additional 
 assumptions on how the events should be scheduled.  Using
@@ -148,8 +148,8 @@ complete computations.
 Safety properties of the model are captured by \emph{invariance} properties
 (also called \emph{invariants}) and by \emph{unless} properties. 
 
-An invariant $I(v)$ is a state-properties that hold at every reachable state of the model.
-In order to prove that $I(v)$ is an invariant of $\Mch$,
+An invariant $I.v$ is a state-properties that hold at every reachable state of the model.
+In order to prove that $I.v$ is an invariant of $\Mch$,
 we prove that $\ew{\execution.\Mch \wide{\limp} \G \initially \! I}$.
 In particular, we rely solely on the safety part of the model to prove
 invariance properties, i.e., we prove $\ew{\safety.\Mch \wide{\limp} \G
@@ -178,7 +178,7 @@ The other important class of safety properties is defined by the
   \end{equation}
 \end{Definition}
 Informally, $p \un q$ is a safety property stating that if condition
-$p$ holds then it will hold continuously until $q$ becomes true.
+$p$ holds then it will hold continuously unless $q$ becomes true.
 The formula $(\one \lor \X)$ is used in \eqref{eq:un-def} to allow
 the last state where $p$ holds and the state where $q$ first holds to 
 either be the same state or to immediately follow one another.
@@ -462,7 +462,7 @@ The attractiveness of properties such as $\tr p$ is that we can
 %  \end{Reason}
 \end{proof}
 (Due to space restriction, for the rest of this paper, we only present
-sketch proofs of theorems. Detailed proofs are available
+sketch of proofs of theorems. Detailed proofs are available
 in~\cite{thesis/hudon2011}).
 
 Condition \eqref{eq:SCH} is an invariance property. Condition
@@ -511,17 +511,17 @@ As a result of this definition, any property of \Mch is also satisfied
 by \cncMch.  Similarly to \eventB, refinement is considered in \unitb
 on a per event basis.  Consider an abstract event $\evt.t$ belong to
 \Mch and a concrete event $\cncevt.t$ belong to \cncMch as follows.
-\begin{gather*}
+\begin{gather}
   \ubeventinline{\evt}{t}{\guard.t.v}{\csched.t.v}{\fsched.t.v}{\assignment.t.v.v'}\label{eq:absevt} \\
   \ubeventinline{\cncevt}{t}{\cncguard.t.v}{\cnccsched.t.v}{\cncfsched.t.v}{\cncassignment.t.v.v'}\label{eq:cncevt}
-\end{gather*}
+\end{gather}
 We have $\cncevt.t$ is a refinement of $\evt.t$ if
 \begin{align}
   \label{eq:evt-safety}
-  \ew{\execution.\cncMch ~\limp~ (\action.(f.t) \limp \action.(e.t))}~, \textrm{and}
+  \ew{\execution.\cncMch ~&\limp~ (\action.(f.t) \limp \action.(e.t))}~, \textrm{and}
   \tag{EVT-SAF}\\
   \label{eq:evt-live}
-  \ew{\execution.\cncMch ~\limp~ (\schedule.(f.t) \limp \schedule.(e.t))}
+  \ew{\execution.\cncMch ~&\limp~ (\schedule.(f.t) \limp \schedule.(e.t))}
   \tag{EVT-LIVE}
 \end{align}
 A similar rule is presented for the initialisation.  The proof that
@@ -561,10 +561,10 @@ information: \emph{weakening the coarse-schedule}, \emph{replacing the
   \label{thm:ref-rep-crs}
   Given $\cncfsched = \fsched$.  If
   \begin{align}
-    \ew{\execution.\cncMch &\limp \csched 
+    \ew{\execution.\cncMch &\Wide\limp \csched 
          \wide\leadsto \cnccsched}\label{eq:crs} \\
     \label{eq:unless}
-    \ew{\execution.\cncMch &\limp \cnccsched ~\un~ \spneg \csched}~,
+    \ew{\execution.\cncMch &\Wide\limp \cnccsched ~\un~ \spneg \csched}~,
   \end{align}
   then $\ew{\execution.\cncMch \limp (\schedule.(\cncevt.t) \limp \schedule.(\evt.t))}$
 \end{Theorem}
