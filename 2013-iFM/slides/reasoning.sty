@@ -1,0 +1,20 @@
+%%%%%
+% Package for reasoning (Carroll Morgan's style).
+% Author: Thai Son Hoang
+%%%%%
+%%%%% Change log:
+%%%%% - 2011/11/29:
+%%%%%    Initial version
+
+\NeedsTeXFormat{LaTeX2e}\relax
+\ProvidesPackage{reasoning}[2011/11/29]
+
+\newenvironment{Reason}{\begin{tabbing}\hspace{2em}\=\kill}{\end{tabbing}\vspace
+{-2.5ex}}
+\newcommand{\Step}[2]{#1 \> $\begin{array}[t]{ll}#2\end{array}$ \\}
+\newcommand{\StepR}[3]{#1 \> $\begin{array}[t]{ll}#3\end{array}$ \` {\RF
+\makebox[0pt][r]{#2}} \\}
+\newcommand{\WideStepR}[3]{#1 \` {\RF #2} \\[1ex] \>
+$\begin{array}[t]{l}#3\end{array}$ \\}
+\newcommand{\Space}{\\}
+\newcommand{\RF}{\small}

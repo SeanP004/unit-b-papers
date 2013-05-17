@@ -33,7 +33,9 @@
 %  \usetheme{Szeged}
 %  \usetheme{academia}
   % or ...
-  \setbeamercovered{transparent}
+%  \setbeamercovered{transparent}
+  \setbeamercovered{invisible}
+  \setbeamertemplate{navigation symbols}{} %remove navigation symbols
   % or whatever (possibly just delete it)
 %  \universitylogo{ethlogo-black}
 %  \departmentlogo{web_Icon}
@@ -140,27 +142,28 @@
 
 
 \pgfdeclareimage[height=20ex]{out-of-order}{out-of-order}
+\pgfdeclareimage[height=8ex]{ethz}{ethlogo-black}
+\pgfdeclareimage[height=8ex]{yorku}{yorku}
 
 \begin{document}
 
 
-% \logo{
-%   \vbox to \textheight{
-%     \vfil\hbox to 1.15\textwidth{
-%       \pgfuseimage{ethz}
-%       \hfil
-%       \pgfuseimage{yorku}
-%     }
-%   }
-% }
+\logo{
+  \vbox to \textheight{
+    \vfil\hbox to 1.15\textwidth{
+      \pgfuseimage{yorku}
+      \hfil
+      \pgfuseimage{ethz}
+    }
+  }
+}
 \begin{frame}
   \titlepage
 \end{frame}
 \logo{}
 
 \begin{frame}
-  \frametitle{Refinement and Liveness Properties (1/2)}
-  \framesubtitle{Safety vs. Liveness}
+  \frametitle{Safety vs. Liveness}
 
   \begin{columns}
     \begin{column}{0.45\textwidth}
@@ -189,7 +192,9 @@
 
   \pause
   \begin{itemize}
-  \item Liveness properties are \alert{desirable}. \pause
+  \item Liveness properties are \alert{desirable}.
+    \pause
+    
     \smallskip
     \begin{center}
       \pgfuseimage{out-of-order}
@@ -270,6 +275,20 @@
     \alert{guided by both safety and liveness requirements}.
   \end{itemize}
 \end{frame}
+
+
+\begin{frame}
+  \frametitle{Contributions}
+
+  \begin{itemize}
+  \item Event schedules: a generalisation of weakly and strongly fair
+    assumptions.
+    \medskip
+  \item Refinement of event schedules preserving liveness properties.
+  \end{itemize}
+\end{frame}
+
+
 
 \section{The Unit-B Modelling Method}
 \label{sec:unit-b-modelling}
@@ -426,7 +445,7 @@
       If $\csched.\pt.\vv$ holds infinitely long and $\fsched.\pt.\vv$
       holds infinitely often \\then eventually $\evt.\pt$ is executed.
       \[\schedule.(\evt.t) \Wide= \always (\always \csched \land \always \eventually \fsched
-      \wide\limp \eventually (\fsched \land \act.(\evt.\pt)))\]
+      \wide\limp \eventually (\act.(\evt.\pt)))\]
     \end{center}
   \end{alertblock}
 \end{frame}

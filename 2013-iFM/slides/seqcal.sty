@@ -1,0 +1,104 @@
+\NeedsTeXFormat{LaTeX2e}\relax
+\ProvidesPackage{seqcal}[2011/09/30]
+
+%%%%% Change log:
+%%%%% - 2011/09/27:
+%%%%%    Macros for rewriting rules.
+%%%%% - 2011/09/30:
+%%%%%    Macros for WD sequent (inline)
+
+%% Commonly used for antecedents.
+\newcommand{\Hbold}{\mathbf{H}}
+
+% Obligation with name in a box.
+\newcommand{\Obligation}[3]{
+  \framebox{
+    $
+    \begin{array}{@{\quad\quad}l@{\quad}|}
+      \\[-1ex]
+      #2\\
+      \hspace{-1em}\vdash\\
+      #3\\[1ex]
+    \end{array}
+    \hspace{1em}
+    #1
+    \hspace{0.5em}
+    $
+  }
+}
+
+
+% Sequent in a box.
+\newcommand{\Sequent}[2]{
+  \begin{array}{|@{\quad\quad}l@{\quad}|}
+    \hline
+    \\[-1ex]
+    #1\\
+    \hspace{-1em}\vdash\\
+    #2\\[2ex]
+    \hline
+  \end{array}
+}
+
+% In-line sequent.
+\newcommand{\sequent}[2]{
+  \begin{array}{l}
+    #1\
+    \mathrel{\vdash}\ 
+    #2
+  \end{array}
+}
+
+% WD Sequent in a single line.
+\newcommand{\sequentwd}[2]{
+  \begin{array}{l}
+    #1\
+    \mathrel{\vdash_{\Dop}}\ 
+    #2
+  \end{array}
+}
+
+% Proofrule
+\newcommand{\proofrule}[3]{
+  \begin{array}{|l|}
+    \hline\\
+    \begin{array}{c}
+      #2\\[.5ex]
+      \hline\\[-1.5ex]
+      #3\\[1ex]
+    \end{array}
+    \quad \mathbf{#1}\\
+    \hline
+  \end{array}
+}
+
+% Inline proof rules
+\newcommand{\inlineproofrule}[3]{
+  \begin{array}{c}
+    #2\\[.5ex]
+    \hline\\[-1.5ex]
+    #3
+  \end{array}
+  \,\textbf{#1}
+}
+
+% Proofrule with a double horizontal line, i.e.,
+% a proofrule that can be applied in both directions.
+\newcommand{\proofrulesym}[3]{
+  \begin{array}{|l|}
+    \hline\\
+    \begin{array}{c}
+      #2\\[.5ex]
+      \hline \hline\\[-1.5ex]
+      #3
+    \end{array}
+    \quad \mathbf{#1}\\[1.5em]
+    \hline
+  \end{array}
+}
+
+% Rewriting rules
+\newenvironment{rewritingrules}{\begin{array}{|@{\quad}c@{\quad}|@{\quad}c@{\quad}|@{\quad}c@{\quad}|}}{\end{array}}
+
+% Substitution
+\newcommand\substitution[3]{#3_{[#1/#2]}}

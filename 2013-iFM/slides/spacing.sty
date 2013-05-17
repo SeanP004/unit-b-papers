@@ -1,0 +1,26 @@
+%%%%%
+% Package for some customize spacings.
+%%%%%
+%%%%%
+% Change logs
+%
+% 2011/03/28:
+% - Initial version.
+% 2011/11/10
+% - Added macros for Sections, Figures, etc.
+%%%%%
+\NeedsTeXFormat{LaTeX2e}\relax
+\ProvidesPackage{space}[2011/11/10]
+
+%%%%% Macros for spacing
+\newcommand{\wide}[1]{~#1~}
+\newcommand{\Wide}[1]{~~#1~~}
+\newcommand{\WIDE}[1]{~~~#1~~~}
+
+%%%%% Macros for "i.e.", "e.g."
+\newcommand{\IE}{\textit{i.e.},\xspace}
+\newcommand{\EG}{\textit{e.g.},\xspace}
+
+%%%%% Macros for Sections/Figures, etc.
+\newcommand{\Sect}[1]{Sect.~\ref{#1}}
+\newcommand{\Fig}[1]{Fig.~\ref{#1}}
