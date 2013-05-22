@@ -832,7 +832,7 @@
     \item Liveness assumption strengthening.
       \smallskip
     \item Schedules weakening: \[(\always \csched \wide\land \always
-      \eventually \fsched) \WIDE\limp (\always \cnccsched \wide\land
+      \eventually \fsched) \WIDE\limp \eventually (\always \cnccsched \wide\land
       \always \eventually \cncfsched)\]
     \end{itemize}
   \end{itemize}
@@ -853,7 +853,7 @@
   
   \begin{equation}
     (\always \csched \wide\land \always
-    \eventually \fsched) \WIDE\limp (\always \cnccsched \wide\land
+    \eventually \fsched) \WIDE\limp \eventually (\always \cnccsched \wide\land
     \always \eventually \cncfsched)\label{eq:ref-live}
     \tag{REF\_LIVE}
   \end{equation}
@@ -870,7 +870,7 @@
     \item Coarse-schedule stabilising
       \begin{equation}
         \label{eq:csched-stable}
-        \cnccsched \wide\un \csched
+        \cnccsched \wide\un \neg \csched
         \tag{C\_STB}
       \end{equation}
     \item Fine-schedule following
