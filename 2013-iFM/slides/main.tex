@@ -118,14 +118,14 @@
 %  \end{frame}
 % }
 
-\AtBeginSubsection[]
-{
- \begin{frame}<beamer>
-% \begin{frame}
-   \frametitle{Outline}
-   \tableofcontents[currentsection,currentsubsection]
- \end{frame}
-}
+% \AtBeginSubsection[]
+% {
+%  \begin{frame}<beamer>
+% % \begin{frame}
+%    \frametitle{Outline}
+%    \tableofcontents[currentsection,currentsubsection]
+%  \end{frame}
+% }
 
 % If you wish to uncover everything in a step-wise fashion, uncomment
 % the following command:
@@ -138,12 +138,14 @@
 \newcommand*\dashV{\mathrel{\mathpalette\m@thr@fl@ct{\mathord\vDash}}}
 \newcommand*\m@thr@fl@ct[2]{\reflectbox{$\m@th#1#2$}}
 \makeatother
-\newcommand{\abstracts}{\sqsubseteq}
-
+\providecommand{\abstracts}{\textsf{refined by}}
+\providecommand{\satisfies}{\textsf{satisfies}}
 
 \pgfdeclareimage[height=20ex]{out-of-order}{out-of-order}
 \pgfdeclareimage[height=8ex]{ethz}{ethlogo-black}
 \pgfdeclareimage[height=8ex]{yorku}{yorku}
+\pgfdeclareimage[height=15ex]{sketch}{sybil_book_sketch}
+\pgfdeclareimage[height=15ex]{final}{sybil_book}
 
 \begin{document}
 
@@ -206,96 +208,70 @@
 
 \end{frame}
 
-\section{Formal Systems Development using Refinement}
-\label{sec:form-syst-devel}
+%\section{Formal Systems Development using Refinement}
+%\label{sec:form-syst-devel}
 
 \begin{frame}
-  \frametitle{Formal Systems Development using Refinement}
-
-  \begin{itemize}
-  \item To develop a system \Mch satisfying property $\phi$, i.e., $\Mch
-    \models \phi$.
-    \smallskip
+  \frametitle{Systems Development using Event-B}
+  \note{
     \begin{itemize}
-    \item \Mch: some transition system
+    \item To develop a system \Mch satisfying property $\phi$, i.e., $\Mch
+      \models \phi$.
       \smallskip
-    \item $\phi$: some logical formula
+      \begin{itemize}
+      \item \Mch: some transition system
+        \smallskip
+      \item $\phi$: some logical formula
+      \end{itemize}
+      \medskip
+    \item The main challenge: the \alert{complexity of the system}.
+      \medskip
+    \item \alert{Refinement} allows the step-by-step design of the
+      system.
     \end{itemize}
-    \medskip
-  \item The main challenge: the \alert{complexity of the system}.
-    \medskip
-  \item \alert{Refinement} allows the step-by-step design of the
-    system.
+  }
+  \begin{figure}[h]
+    \centering \input{tikz-refinement}
+  \end{figure}
+
+  \begin{itemize}
+  \item $\phi_0, \phi_1, \ldots, \phi_n$: safety properties.
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Refinement}
-  \framesubtitle{The UNITY way vs. the Event-B way}
 
-
-  \begin{itemize}
-  \item UNITY: Refines the \alert{formulae}.
-    \[
-    \lefteqn{\overbrace{\phantom{\phi \wide\follows \phi_1
-          \wide\follows \ldots \wide\follows
-          \phi_n}}^{\textsf{Refinement}}} \alert{\phi} \wide\follows \phi_1
-    \wide\follows \ldots \wide\follows \underbrace{\phi_n \WIDE\dashV
-      \alert{\Mch}}_{\textsf{Translation}}
-    \]
-    \begin{itemize}
-    \item<2-> Cons: \alert{Hard to understand} the choice of refinement.
-    \end{itemize}
-    \medskip
-
-  \item Event-B: Refines \alert{transition systems}.
-    \[
-    \lefteqn{
-      \underbrace{\phantom{\phi \WIDE\dashV
-        \Mch_0}}_{\textsf{Verification}}}  \alert{\phi} \WIDE\dashV
-        \overbrace{\Mch_0 \wide\abstracts \Mch_1 \ldots \wide\abstracts \alert{\Mch}}^{\textsf{Refinement}}
-    \]
-    \begin{itemize}
-    \item<2-> Cons: No support for \alert{liveness properties}.
-    \end{itemize}
-  \end{itemize}
-\end{frame}
 
 \begin{frame}
-  \frametitle{The Unit-B Modelling Method}
+  \frametitle{Unit-B = UNITY + Event-B}
+  \note{
+    \begin{itemize}
+    \item Inspired by UNITY and Event-B.
+      \medskip
+    \item Support the reasoning of \alert{liveness properties} (UNITY).
+      \medskip
+    \item \alert{Refinement} of transition systems (Event-B style).
+      \medskip
+    \item Developments using Unit-B are \\
+      \alert{guided by both safety and liveness requirements}.
+    \end{itemize}
+  }
 
+  \begin{figure}
+    \centering
+    \input{tikz-liveness}
+  \end{figure}
+  
   \begin{itemize}
-  \item Inspired by UNITY and Event-B.
-    \medskip
-  \item Support the reasoning of \alert{liveness properties} (UNITY).
-    \medskip
-  \item \alert{Refinement} of transition systems (Event-B style).
-    \medskip
   \item Developments using Unit-B are \\
-    \alert{guided by both safety and liveness requirements}.
+      \alert{guided by both safety and liveness requirements}.
   \end{itemize}
 \end{frame}
 
-
-\begin{frame}
-  \frametitle{Contributions}
-
-  \begin{itemize}
-  \item Event schedules: a generalisation of weakly and strongly fair
-    assumptions.
-    \medskip
-  \item Refinement of event schedules preserving liveness properties.
-  \end{itemize}
-\end{frame}
 
 
 
 \section{The Unit-B Modelling Method}
 \label{sec:unit-b-modelling}
-\begin{frame}<beamer>
-  \frametitle{Outline}
-  \tableofcontents[currentsection]
-\end{frame}
 
 \newBpar[pt]{t}
 \newBvrb[vv]{v}
@@ -1266,7 +1242,53 @@
     
   \end{thebibliography}
 \end{frame}
+
+
 \end{document}
+
+\begin{frame}
+  \frametitle{Refinement}
+  \framesubtitle{The UNITY way vs. the Event-B way}
+
+
+  \begin{itemize}
+  \item UNITY: Refines the \alert{formulae}.
+    \[
+    \lefteqn{\overbrace{\phantom{\phi \wide\follows \phi_1
+          \wide\follows \ldots \wide\follows
+          \phi_n}}^{\textsf{Refinement}}} \alert{\phi} \wide\follows \phi_1
+    \wide\follows \ldots \wide\follows \underbrace{\phi_n \WIDE\dashV
+      \alert{\Mch}}_{\textsf{Translation}}
+    \]
+    \begin{itemize}
+    \item<2-> Cons: \alert{Hard to understand} the choice of refinement.
+    \end{itemize}
+    \medskip
+
+  \item Event-B: Refines \alert{transition systems}.
+    \[
+    \lefteqn{
+      \underbrace{\phantom{\phi \WIDE\dashV
+        \Mch_0}}_{\textsf{Verification}}}  \alert{\phi} \WIDE\dashV
+        \overbrace{\Mch_0 \wide\abstracts \Mch_1 \ldots \wide\abstracts \alert{\Mch}}^{\textsf{Refinement}}
+    \]
+    \begin{itemize}
+    \item<2-> Cons: No support for \alert{liveness properties}.
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Contributions}
+
+  \begin{itemize}
+  \item Event schedules: a generalisation of weakly and strongly fair
+    assumptions.
+    \medskip
+  \item Refinement of event schedules preserving liveness properties.
+  \end{itemize}
+\end{frame}
 
 
 %%% Local Variables: 
