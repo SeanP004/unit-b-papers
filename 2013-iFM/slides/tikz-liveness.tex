@@ -32,26 +32,26 @@
 
   \uncover<2->{
     \alert<2>{
-      \draw (3.5, 1) node(asm){liveness assumptions};
-      \draw[->] (asm) to[out=200, in=60] (m0);
-      \draw[->] (asm) to[out=-90, in = 90] (m1);
-      \draw[->] (asm) to[out=-20, in = 120] (mN);
+      \draw (3.5, 1) node(asm){scheduling assumptions};
+      \draw[->] (asm) to[out=200, in=60] node[fill=white]{+} (m0);
+      \draw[->] (asm) to[out=-90, in = 90] node[fill=white]{+} (m1);
+      \draw[->] (asm) to[out=-20, in = 120] node[fill=white]{+} (mN);
     }
   }
 
   \uncover<3->{
     \alert<3>{
       \draw (3.5, -2) node(prg){progress properties};
-      \draw[->] (prg) to[out=-200, in = -60] (phi0);
-      \draw[->] (prg) to[out=90, in = -90] (phi1);
-      \draw[->] (prg) to[out=20, in = -120] (phiN);
+      \draw[->] (prg) to[out=-200, in = -60] node[fill=white]{+} (phi0);
+      \draw[->] (prg) to[out=90, in = -90] node[fill=white]{+} (phi1);
+      \draw[->] (prg) to[out=20, in = -120] node[fill=white]{+} (phiN);
     }
   }
 
   \uncover<4->{
     \alert<4>{
-      \draw (1.5, -0.5) node[align=center]{preserves\\liveness};
-      \draw (5, -0.5) node[align=center]{preserves\\liveness};
+      \draw (1.5, -0.5) node[align=center]{+\\preserves\\liveness};
+      \draw (5, -0.5) node[align=center]{+\\preserves\\liveness};
     }
   }
 \end{tikzpicture}

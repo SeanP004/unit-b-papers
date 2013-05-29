@@ -60,14 +60,17 @@ Refinements
 External variables are glued together by external invariant `j.cv.av`
 
 Internal invariants `J.cw.cv.aw.av` subsume external invariant i.e.,
+
      [ J.cw.cv.aw.av  ⇒ j.cv.av ]
 
 
 Refinement rule
+
     (Ref_def) [ ⟨∃cw :: Ex.N⟩  ⇒ ⟨∃av:: ⟨∃aw::Ex.M⟩ ∧ j.cv.av⟩]
       
 
 Proposal
+
        (Ref_def)
      ≡
        [ ⟨∃cw :: Ex.N⟩  ⇒ ⟨∃av:: ⟨∃aw::Ex.M⟩ ∧ j.cv.av⟩ ]
