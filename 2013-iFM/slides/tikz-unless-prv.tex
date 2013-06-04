@@ -1,0 +1,32 @@
+\ifx\PREAMBLE\UnDef
+\documentclass{beamer}
+\usepackage{tikz}
+\usepackage[english]{babel}
+% or whatever
+
+\usepackage[latin1]{inputenc}
+% or whatever
+\usepackage{xifthen}
+\usepackage{bsymb}
+\usepackage{eventB}
+
+\newBevt{evt}
+
+\begin{document}
+\else
+\fi
+
+\providecommand{\until}{\mathop{\mathcal{U}}}
+\begin{tikzpicture}[scale=1]
+  \draw (2,0) node(s0)[circle, draw, fill=blue!20!white, inner sep =
+  2pt, minimum width=1.5cm]{$P \land \neg Q$};
+  \draw (6,0) node(s1)[circle, draw, fill=blue!20!white, inner sep =
+  2pt, minimum width=1.5cm]{$P \lor Q$};
+  \draw[->] (s0) --node[fill=white]{$\evt.t$} (s1);
+  
+\end{tikzpicture}
+
+\ifx\PREAMBLE\UnDef
+\end{document}
+\else
+\fi
