@@ -1,0 +1,13 @@
+Title: A Step-wise Development Method with Progress Concerns
+
+Abstract:
+We present Unit-B, a formal method inspired by Event-B and UNITY, for
+designing systems via step-wise refinement preserving both safety and
+liveness properties.  In particular, we introduce the notion of
+coarse- and fine-schedules for events, a generalisation of weak- and
+strong-fairness assumptions. We propose proof rules for reasoning
+about progress properties related to the schedules.  Furthermore, we
+develop techniques for refining systems by adapting event schedules
+such that liveness properties are preserved.  We illustrate our
+approach by an example to show that Unit-B developments can be guided
+by both safety and liveness requirements.
