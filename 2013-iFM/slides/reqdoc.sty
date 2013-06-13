@@ -28,7 +28,6 @@
 \RequirePackage{varioref}
 %%%%% END Package loading %%%%%
 
-
 %%%%% BEGIN Declaration of options %%%%%
 \newenvironment{requirements}
   {\begin{requirementsbox}}
@@ -113,6 +112,9 @@
 %%%%% The shared counter for requirements
 \newcounter{requirement@counter}
 \labelformat{requirement@counter}{REQ~#1}
+\newcommand{\setReqCounter}[1][0]{
+  \setcounter{requirement@counter}{#1}
+}
 
 %%%%% Specific command for REQUIREMENT (REQ). This command used the
 %%%%% general macro \requirement for requirement.

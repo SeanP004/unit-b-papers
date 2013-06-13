@@ -60,7 +60,7 @@
 \usepackage[compact]{reqdoc}
 \usepackage{reasoning}
 \usepackage{tikz}
-\usetikzlibrary{snakes,arrows}
+\usetikzlibrary{shapes,snakes,arrows}
 
 %%%%% Some macros used in proof rules
 %\newcommand{\Conv}[2]{\sequent{#1}{\downarrow #2}}
@@ -74,16 +74,16 @@
 \newcommand{\Pred}{P}
 \newcommand{\Mch}{\Bmch{M}}
 
-\title[The Unit-B Modelling Method]
+\title
  % (optional, use only with long paper titles)
-{Progress Concerns as Design Guidelines}
+{Systems Design Guided by Progress Concerns}
 
 %\subtitle
 
-\author[S.~Hudon and T.S.~Hoang] % (optional, use only with lots of authors)
-{Simon Hudon\inst{1} and Thai Son Hoang\inst{2}}
+\author[S.~Hudon and \textcolor{red}{T.S.~Hoang}] % (optional, use only with lots of authors)
+{Simon Hudon\inst{1} and \textcolor{red}{Thai Son Hoang}\inst{2}}
 
-\institute[York University and ETH-Z\"urich] %
+\institute[] %
 %(optional, but mostly needed)
 {
   \inst{1}Department of Computer Science, York University, Canada \\
@@ -143,6 +143,7 @@
 
 \pgfdeclareimage[height=20ex]{out-of-order}{out-of-order}
 \pgfdeclareimage[height=8ex]{ethz}{ethlogo-black}
+\pgfdeclareimage[height=8ex]{hitachi}{hitachi}
 \pgfdeclareimage[height=8ex]{yorku}{yorku}
 \pgfdeclareimage[height=15ex]{sketch}{sybil_book_sketch}
 \pgfdeclareimage[height=15ex]{final}{sybil_book}
@@ -169,16 +170,6 @@
 
   \begin{columns}
     \begin{column}{0.45\textwidth}
-      \begin{block}{Liveness Properties}
-        \begin{itemize}
-        \item Something (good) \\
-          \quad \alert{will happen}
-          \medskip
-        \item e.g. termination, progress
-        \end{itemize}
-      \end{block}
-    \end{column}
-    \begin{column}{0.45\textwidth}
       \begin{block}{Safety Properties}
         \begin{itemize}
         \item Something (bad) \\
@@ -188,22 +179,32 @@
         \end{itemize}
       \end{block}
     \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{block}{Liveness Properties}
+        \begin{itemize}
+        \item Something (good) \\
+          \quad \alert{will happen}
+          \medskip
+        \item e.g. termination, progress
+        \end{itemize}
+      \end{block}
+    \end{column}
   \end{columns}
 
   \vspace{2ex}
 
   \pause
   \begin{itemize}
-  \item Liveness properties are \alert{desirable}.
+  \item Liveness properties are \alert{essential}.
     \pause
     
     \smallskip
     \begin{center}
       \pgfuseimage{out-of-order}
     \end{center}
-    \pause
-    \medskip
-  \item Event-B does not support liveness properties.
+%    \pause
+%    \medskip
+%  \item Event-B does not support liveness properties.
   \end{itemize}
 
 \end{frame}
@@ -262,7 +263,7 @@
   \end{figure}
   
   \begin{itemize}
-  \item Developments using Unit-B are \\
+  \item<4-> Developments using Unit-B are \\
       \quad \alert{guided by both safety and liveness requirements}.
   \end{itemize}
 \end{frame}
@@ -271,7 +272,7 @@
   \frametitle{Traces and the Language of Temporal Logic}
 
   \begin{alertblock}{}
-    A trace $\sigma$ is a (finite or infinite sequence of states)
+    A trace $\sigma$ is a (finite or infinite) sequence of states
     \[\sigma = s_0, s_1, s_2, s_3, \ldots\]
   \end{alertblock}
 
@@ -279,7 +280,7 @@
   \item A (basic) \structure{state formula} $\Pred$ is any
     \alert{first-order logic formula},
     \medskip
-  \item The basic formulas can be extended by \structure{combining} \\
+  \item The basic formulae can be extended by \structure{combining} \\
     \quad the \structure{Boolean operators} ($\neg, \land, \lor, \limp$) with
     \alert{temporal operators}:
     \medskip
@@ -288,6 +289,9 @@
     \end{center}
     \begin{center}
       \input{tikz-eventually}
+    \end{center}
+    \begin{center}
+      \input{tikz-until}
     \end{center}
   \end{itemize}
 \end{frame}
@@ -308,8 +312,8 @@
 \newBset[TRAIN]{TRN}
 \newBvrb[trains]{trns}
 \newBpar[train]{t}
-\newBevt{arrive}
-\newBevt{depart}
+\newBevt{arrives}
+\newBevt{departs}
 \newBinv[invTrainType]{inv0\_1}
 
 \newBset[BLOCK]{BLK}
@@ -330,7 +334,7 @@
 \newBpar[platform]{p}
 
 \begin{frame}
-  \frametitle{Unit-B Models. Guarded and Scheduled Events}
+  \frametitle{Unit-B Models. \alert<1>{Guarded} and \alert<2>{Scheduled} Events}
 
   \note{
     \begin{itemize}
@@ -347,7 +351,20 @@
     \begin{column}{0.3\textwidth}
       \begin{Bcode}
         $
-        \ubevent{\evt}{\pt}{\guard.\pt.\vv}{\alert{\csched.\pt.\vv}}{\alert{\fsched.\pt.\vv}}{\assignment.\pt.\vv.\vv'}
+        \begin{array}{l}
+          \Bevt{\evt} \\
+          \quad\Bany~\pt~\Bwhere\\
+          \quad\quad\guard.\pt.\vv\\
+          \uncover<2->{
+          \quad\Bduring\\
+          \quad\quad\alert{\csched.\pt.\vv} \\
+          \quad\Bupon\\
+          \quad\quad\alert{\fsched.\pt.\vv} \\
+          }
+          \quad\Bthen\\
+          \quad\quad\assignment.\pt.\vv.\vv'\\
+          \quad\Bend
+        \end{array}
         $
       \end{Bcode}
     \end{column}
@@ -356,11 +373,11 @@
       \item Execution of $\evt.\pt$ corresponds to a formula
         $\act.(\evt.\pt)$.
         \smallskip
-      \item $\csched.\pt.\vv$: coarse-schedule.
+      \item<2-> $\csched.\pt.\vv$: \alert{coarse-schedule}.
         \smallskip
-      \item $\fsched.\pt.\vv$: fine-schedule.
+      \item<2-> $\fsched.\pt.\vv$: \alert{fine-schedule}.
         \smallskip
-      \item<2-> Healthiness condition: \[\csched.\pt.\vv \land
+      \item<3-> Healthiness condition: \[\csched.\pt.\vv \land
         \fsched.\pt.\vv \wide\limp \guard.\pt.\vv\]
       \end{itemize}
     \end{column}
@@ -368,15 +385,17 @@
 
   \medskip
 
-  \begin{alertblock}{Liveness (Scheduling) Assumption}
-    \begin{center}
-      If $\csched.\pt.\vv$ holds infinitely long and $\fsched.\pt.\vv$
-      holds infinitely often \\then eventually $\evt.\pt$ is executed.
-      \[\schedule.(\evt.t) \Wide= \always (\always \csched \land \always \eventually \fsched
-      \wide\limp \eventually (\act.(\evt.\pt)))\]
-    \end{center}
-  \end{alertblock}
-
+  \uncover<2->{
+    \begin{alertblock}{Liveness (Scheduling) Assumption}
+      \begin{center}
+        If $\csched.\pt.\vv$ holds infinitely long and $\fsched.\pt.\vv$
+        holds infinitely often \\then eventually $\evt.\pt$ is
+        executed when $\fsched.\pt.\vv$ holds.
+        \[\schedule.(\evt.t) \Wide= \always (\always \csched \land \always \eventually \fsched
+        \wide\limp \eventually (\fsched \land \act.(\evt.\pt)))\]
+      \end{center}
+    \end{alertblock}
+  }
 \end{frame}
 
 \begin{frame}
@@ -410,8 +429,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Scheduled events (2/2)}
-  \framesubtitle{Conventions}
+  \frametitle{Conventions}
 
   \[
   \ubeventinline{\evt}{\pt}{\ldots}{
@@ -443,13 +461,13 @@
 %     \medskip
 %   \item Variable \trains denotes the set of trains in the network.
 %     \medskip
-%   \item Event \arrive models a train entering the network.
+%   \item Event \arrives models a train entering the network.
 %     \medskip
-%   \item Event \depart models a train leaving the network.
+%   \item Event \departs models a train leaving the network.
 %   \end{itemize}
 %   \begin{Bcode}
 %     $
-%     \ubevent{\arrive}
+%     \ubevent{\arrives}
 %     {\train}
 %     {\train \in \TRAIN}
 %     {}
@@ -458,7 +476,7 @@
 %     $
 %     \Bhspace
 %     $
-%     \ubevent{\depart}{\train}{\train \in \TRAIN}{\train \in \trains}{}{\trains \bcmeq \trains \setminus \{\train\}}
+%     \ubevent{\departs}{\train}{\train \in \TRAIN}{\train \in \trains}{}{\trains \bcmeq \trains \setminus \{\train\}}
 %     $
 %   \end{Bcode}
 % \end{frame}
@@ -500,7 +518,7 @@
     \end{itemize}
   }
   \begin{itemize}
-  \item \alert{Invariance} properties: (in LTL $\always \iI$)
+  \item \alert{Invariance} properties:
     \smallskip
     \begin{figure}
       \centering
@@ -559,10 +577,19 @@
     \end{column}
     \hspace{-2em}
     \begin{column}{0.6\textwidth}
-      \begin{requirements}
-        \saf{saf:no-collision}{There is at most one train on each block}\ReqSpacing
-        \live{live:train-leave}{Each train in the network eventually leaves}
-      \end{requirements}
+      \alt<1>{
+        \begin{requirements}
+          \saf{saf:no-collision}{There is at most one train on each block}\ReqSpacing
+          \live{live:train-leave}{Each train in the network eventually leaves}
+        \end{requirements}
+      }
+      {
+        \setReqCounter
+        \begin{requirements}
+          \saf{saf:no-collision}{There is at most one train on each block}\ReqSpacing
+          \live{live:train-leave}{Each train in the network eventually leaves}
+        \end{requirements}
+      }
     \end{column}
   \end{columns}
   \medskip
@@ -571,10 +598,10 @@
 
   \begin{block}{Refinement Strategy}
     \begin{itemize}
-    \item[Model 0] To model trains in the network, focus on \ref{live:train-leave}
+    \item[Model 0] To model trains in the network, focus on \alert{\ref{live:train-leave}}
     \item[Ref. 1] To introduce the network topology
-    \item[Ref. 2] To take into account \ref{saf:no-collision}
-    \item[Ref. 3] To introduce signals and derive a spec for the controller
+    \item[Ref. 2] To take into account \alert{\ref{saf:no-collision}}
+    \item[Ref. 3] To introduce signals and derive a specification for the controller
     \end{itemize}
   \end{block}
 \end{frame}
@@ -584,44 +611,52 @@
   \frametitle{A Signal Control System. The Initial Model}
   \framesubtitle{Sketch}
   \begin{description}
-  \item[\ref{live:train-leave}]{Each train in the network eventually leaves}
+  \item[\ref{live:train-leave}]{Each \alert{train in the network} eventually leaves}
   \end{description}
   \medskip
-  \begin{Bcode}
-    $
-    \variables{\trains}
-    $
-    \Bhspace
-    $
-    \invariants{\trains \subseteq \TRAIN}
-    $
-    \Bvspace
-    \pause
-    $
-    \ubevent{\arrive}
-    {\train}
-    {\train \in \TRAIN}
-    {}
-    {}
-    {\trains \bcmeq \trains \bunion \{\train\}}
-    $
-    \Bhspace
-    $
-    \ubevent{\depart}{\train}{\train \in \TRAIN}{}{}{\trains \bcmeq \trains \setminus \{\train\}}
-    $
-    \Bvspace
-    \pause
-    $
-    \properties{
-      \Binv{prg0\_1}: & \train \in \trains \wide\leadsto \train \notin
-      \trains
-    }
-    $
-  \end{Bcode}
-
+  \uncover<2,3>{
+    \begin{Bcode}
+      $
+      \variables{\trains}
+      $
+      \Bhspace
+      $
+      \invariants{\trains \subseteq \TRAIN}
+      $    
+    \end{Bcode}
+  }
+  \alt<1,2>{
+    \begin{figure}
+      \centering
+      \input{tikz-sgnctrl-m0}
+    \end{figure}
+  }{
+    \begin{Bcode}
+      $
+      \ubevent{\arrives}
+      {\train}
+      {\train \in \TRAIN}
+      {}
+      {}
+      {\trains \bcmeq \trains \bunion \{\train\}}
+      $
+      \Bhspace
+      $
+      \ubevent{\departs}{\train}{\train \in \TRAIN}{}{}{\trains \bcmeq \trains \setminus \{\train\}}
+      $
+      \Bvspace
+      \pause
+      $
+      \properties{
+        \Binv{prg0\_1}: & \train \in \trains \wide\leadsto \train \notin
+        \trains
+      }
+      $
+    \end{Bcode}
   \medskip
 
   Note: Free variables are universally quantified.
+  }
 \end{frame}
 
 
@@ -680,6 +715,10 @@
     \end{equation}
   \end{Theorem}
 
+  \begin{itemize}
+  \item Note: general progress properties can be proved\\
+    \quad using the \emph{induction} or \emph{ensure} rules.
+  \end{itemize}
 \end{frame}
 
 % \begin{frame}
@@ -723,20 +762,31 @@
   }
   \begin{Bcode}[\small]
     $
-    \ubevent{\depart}{\train}{\train \in \TRAIN}{\alert{\train \in
-      \trains}}{}{\trains \bcmeq \trains \setminus \{\train\}} $
+    \begin{array}{l}
+      \Bevt{\departs} \\
+      \quad\Bany~\train~\Bwhere\\
+      \quad\quad\train \in \TRAIN\\
+      \uncover<2->{
+        \quad\Bduring\\
+        \quad\quad\alert{\train \in \trains} \\
+      }
+      \quad\Bthen\\
+      \quad\quad\trains \bcmeq \trains \setminus \{\train\}\\
+      \quad\Bend
+    \end{array}
+    $
     \Bhspace
     $ \properties[off]{ \Binv{prg0\_1}: & \train \in \trains
       \wide\leadsto \train \notin \trains } $
   \end{Bcode}
 
   \begin{itemize}
-  \item \eqref{eq:SCH} is trivial.
+  \item<2-> \eqref{eq:SCH} is trivial.
     \medskip
-  \item No fine-schedule ($\fsched$ is $\btrue$) hence \eqref{eq:OP}
+  \item<2-> No fine-schedule ($\fsched$ is $\btrue$) hence \eqref{eq:OP}
     is trivial.
     \medskip
-  \item The event falsifies $\train \in \trains$ \eqref{eq:NEG}
+  \item<2-> The event falsifies $\train \in \trains$ \eqref{eq:NEG}
   \end{itemize}
 \end{frame}
 
@@ -747,9 +797,6 @@
   \frametitle{Refinement}
 
   \begin{itemize}
-  \item Abstract systems can \alert{simulate} behaviours of concrete
-    systems.
-    \[\execution.\Bmch{cnc\Mch} \Wide\limp \execution.\Bmch{abs\Mch}\]
   \item \alert{Event-based} reasoning.
   \end{itemize}
   \medskip
@@ -772,11 +819,15 @@
   \item Liveness:
     \smallskip
     \begin{itemize}
-    \item Liveness assumption strengthening.
+    \item Scheduling assumptions strengthening.
       \smallskip
-    \item Schedules weakening: \[(\always \csched \wide\land \always
-      \eventually \fsched) \WIDE\limp \eventually (\always \cnccsched \wide\land
-      \always \eventually \cncfsched)\]
+    \item Schedules weakening:
+      \begin{equation}
+        (\always \csched \wide\land \always
+        \eventually \fsched) \WIDE\limp \eventually (\always \cnccsched \wide\land
+        \always \eventually \cncfsched)
+        \tag{REF\_LIVE}
+      \end{equation}
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -800,30 +851,31 @@
     \always \eventually \cncfsched)\label{eq:ref-live}
     \tag{REF\_LIVE}
   \end{equation}
-  \begin{itemize}
-  \item<2-> \alert{Practical} rules:
-    \medskip
-    \begin{itemize}
-    \item Coarse-schedule following
-      \begin{equation}
-        \label{eq:csched-weakening}
-        \csched \land \fsched \wide\leadsto \cnccsched
-        \tag{C\_FLW}
-      \end{equation}
-    \item Coarse-schedule stabilising
-      \begin{equation}
-        \label{eq:csched-stable}
-        \cnccsched \wide\un \neg \csched
-        \tag{C\_STB}
-      \end{equation}
-    \item Fine-schedule following
-      \begin{equation}
-        \label{eq:fsched-weakening}
-        \csched \land \fsched \wide\leadsto \cncfsched
-        \tag{F\_FLW}
-      \end{equation}
-    \end{itemize}
-  \end{itemize}
+  
+  \uncover<2->{
+    \begin{block}{Practical rules}
+      \begin{itemize}
+      \item Coarse-schedule following
+        \begin{equation}
+          \label{eq:csched-weakening}
+          \csched \land \fsched \wide\leadsto \cnccsched
+          \tag{C\_FLW}
+        \end{equation}
+      \item Coarse-schedule stabilising
+        \begin{equation}
+          \label{eq:csched-stable}
+          \cnccsched \wide\un \neg \csched
+          \tag{C\_STB}
+        \end{equation}
+      \item Fine-schedule following
+        \begin{equation}
+          \label{eq:fsched-weakening}
+          \csched \land \fsched \wide\leadsto \cncfsched
+          \tag{F\_FLW}
+        \end{equation}
+      \end{itemize}
+    \end{block}
+  }
 \end{frame}
 
 % % \begin{frame}
@@ -893,14 +945,9 @@
   \frametitle{A Signal Control System. The First Refinement}
   \framesubtitle{The State}
   \begin{center}
-    \input{tikz-sgnctrl}
+    \input{tikz-sgnctrl-m1}
   \end{center}
-  \begin{itemize}
-  \item Introduce the network topology: \BLOCK, \Entry, \PLATFORM, \Exit.
-    \medskip
-  \item Variable $\location$ denotes location of trains in the
-    network.
-    \medskip
+  \uncover<2->{
     \begin{Bcode}
       $
       \invariants[off]{
@@ -908,18 +955,18 @@
       }
       $
     \end{Bcode}
-  \end{itemize}
+  }
 \end{frame}
 
 \begin{frame}
   \frametitle{A Signal Control System. The First Refinement}
-  \framesubtitle{Refinement of \depart}
+  \framesubtitle{Refinement of \departs}
 
   \begin{Bcode}
-    $ \ubevent{(abs\_)\depart}{\train}{\train \in \TRAIN}{\train \in
+    $ \ubevent{(abs\_)\departs}{\train}{\train \in \TRAIN}{\train \in
       \trains}{}{\trains \bcmeq \trains \setminus \{\train\}} $
     \Bhspace
-    $ \ubevent{(cnc\_)\depart}{\train}{ \train \in \trains \land
+    $ \ubevent{(cnc\_)\departs}{\train}{ \train \in \trains \land
       \location.\train = \Exit } { \train \in \trains \land
       \location.\train = \Exit} {} {\trains \bcmeq \trains \setminus
       \{\train\} \\ \location \bcmeq \{\train\} \domsub \location} $
@@ -939,7 +986,7 @@
 
 % \begin{frame}
 %   \frametitle{A Signal Control System. The First Refinement}
-%   \framesubtitle{Refinement of \depart}
+%   \framesubtitle{Refinement of \departs}
   
 %   \begin{Reason}
 %     \Step{}{
@@ -973,45 +1020,27 @@
 
 % \end{frame}
 
-% \begin{frame}
-%   \frametitle{The Ensure Rule}
-  
-%   \begin{Theorem}[The ensure-rule] For all state predicates $p$ and $q$,
-%     \label{thm:ensure-rule}
-%     \begin{equation}
-%       \label{eq:ensure-rule}
-%       \alert<4>{(\predP \un \predQ)} \wide\land \alert<2>{(\tr \, \predP \land \neg \predQ)}
-%       \WIDE\limp (\predP \leadsto \predQ)
-%       \tag{ENS}
-%     \end{equation}
-    
-%     \begin{center}
-%       \input{tikz-ensure-rule}
-%     \end{center}
-%   \end{Theorem}
-% \end{frame}
-
 \begin{frame}
   \frametitle{A Signal Control System. The First Refinement}
   \framesubtitle{New Event \moveout}
 
-  \begin{Reason}
-    \Step{}{
-      \train \in \trains \land \location.\train \in \PLATFORM ~\leadsto~ \train \in \trains \land
-      \location.\train = \Exit
-    }
-    \WideStepR{$\follows$}{Ensure rule}{
-      \train \in \trains \land \location.\train \in \PLATFORM ~\un~
-      \train \in \trains \land \location.\train = \Exit \Wide\land \\
-      (\tr \, (\train \in \trains \land \location.\train \in
-      \PLATFORM) \land \neg(\train \in \trains \land \location.\train = \Exit))
-    }
-    \WideStepR{$\leqv$}{Logic}{
-      \ldots \Wide\land (\tr \train \in \trains \land \location.\train \in \PLATFORM)
-    }
-  \end{Reason}
+  % \begin{Reason}
+  %   \Step{}{
+  %     \train \in \trains \land \location.\train \in \PLATFORM ~\leadsto~ \train \in \trains \land
+  %     \location.\train = \Exit
+  %   }
+  %   \WideStepR{$\follows$}{Ensure rule}{
+  %     \train \in \trains \land \location.\train \in \PLATFORM ~\un~
+  %     \train \in \trains \land \location.\train = \Exit \Wide\land \\
+  %     (\tr \, (\train \in \trains \land \location.\train \in
+  %     \PLATFORM) \land \neg(\train \in \trains \land \location.\train = \Exit))
+  %   }
+  %   \WideStepR{$\leqv$}{Logic}{
+  %     \ldots \Wide\land (\tr \train \in \trains \land \location.\train \in \PLATFORM)
+  %   }
+  % \end{Reason}
   
-  \uncover<2->{
+%  \uncover<2->{
     \begin{Bcode}
       $
       \ubevent{\moveout}{\train}
@@ -1021,7 +1050,7 @@
       {\location.\train \bcmeq \Exit}
       $
     \end{Bcode}
-  }
+%  }
 \end{frame}
 
 \begin{frame}
@@ -1160,30 +1189,27 @@
 
 \begin{frame}
   \frametitle{Summary}
-  \framesubtitle{The Unit-B Modelling Method}
+  
+  \begin{alertblock}{The Unit-B Modelling Method}
+    \begin{itemize}
+    \item Guarded and \alert{scheduled} events.  \medskip
+    \item Reasoning about \alert{liveness (progress) properties}.
+      \medskip
+    \item \alert{Refinement} preserving safety and liveness
+      properties.  \medskip
+    \item Developments are \alert{guided by safety and liveness
+        requirements}.
+    \end{itemize}
+  \end{alertblock}
+  
 
-  \begin{itemize}
-  \item Guarded and \alert{scheduled} events.
-    \medskip
-  \item Reasoning about \alert{liveness (progress) properties}.
-    \medskip
-  \item \alert{Refinement} preserving safety and liveness properties.
-    \medskip
-  \item Developments are \alert{guided by safety and liveness requirements}.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Summary}
-  \framesubtitle{Future Work}
-
-  \begin{itemize}
-  \item Data refinement
-    \medskip
-  \item Decomposition / Composition
-    \medskip
-  \item Tool support
-  \end{itemize}
+  \begin{block}{Future Work}
+    \begin{itemize}
+    \item Decomposition / Composition
+      \medskip
+    \item Tool support
+    \end{itemize}    
+  \end{block}
 \end{frame}
 
 % \begin{frame}[allowframebreaks]
@@ -1209,9 +1235,6 @@
     
 %   \end{thebibliography}
 % \end{frame}
-
-
-\end{document}
 
 \begin{frame}
   \frametitle{Refinement}
@@ -1246,65 +1269,6 @@
 
 \end{frame}
 
-\begin{frame}
-  \frametitle{Contributions}
-
-  \begin{itemize}
-  \item Event schedules: a generalisation of weakly and strongly fair
-    assumptions.
-    \medskip
-  \item Refinement of event schedules preserving liveness properties.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Unit-B Models -- Discrete Transition Systems}
-
-  \begin{itemize}
-  \item States are captured by \alert{variables $\vv$}.
-    \medskip
-  \item Transitions are modelled by \alert{guarded and scheduled events}.
-  \end{itemize}
-
-\end{frame}
-
-\begin{frame}
-  \frametitle{Scheduled events (1/2)}
-  
-  \begin{columns}
-    \begin{column}{0.3\textwidth}
-      \[
-      \ubevent{\evt}{\pt}{\ldots}{
-        \alert{\csched.\pt.\vv}
-      }{
-        \alert{\fsched.\pt.\vv}
-      }
-      {\ldots}
-      \]
-    \end{column}
-    \begin{column}{0.5\textwidth}
-      \begin{itemize}
-      \item $\csched.\pt.\vv$: coarse-schedule.
-        \medskip
-      \item $\fsched.\pt.\vv$: fine-schedule.
-        \medskip
-      \item<2-> Healthiness condition: \[\csched.\pt.\vv \land
-        \fsched.\pt.\vv \wide\limp \guard.\pt.\vv\]
-      \end{itemize}
-    \end{column}
-  \end{columns}
-
-  \medskip
-
-  \begin{alertblock}{Liveness (Scheduling) Assumption}
-    \begin{center}
-      If $\csched.\pt.\vv$ holds infinitely long and $\fsched.\pt.\vv$
-      holds infinitely often \\then eventually $\evt.\pt$ is executed.
-      \[\schedule.(\evt.t) \Wide= \always (\always \csched \land \always \eventually \fsched
-      \wide\limp \eventually (\act.(\evt.\pt)))\]
-    \end{center}
-  \end{alertblock}
-\end{frame}
 
 \begin{frame}
   \frametitle{Execution of Unit-B Models}
@@ -1312,7 +1276,7 @@
   \begin{align}
     \execution.\Mch \Wide{&=} \safety.\Mch \land
     \liveness.\Mch \\[2ex]
-    \safety.\Mch  \Wide{&=}  \init \land \always \step.\Mch \\[2ex]
+    \safety.\Mch  \Wide{&=}  \init.\Mch \land \always \step.\Mch \\[2ex]
     \step.\Mch  \Wide{&=} (\exists \evt.t \in \Mch \qdot
     \act.(\evt.t)) \,\lor\, \SKIP \\[2ex]
     \liveness.\Mch \Wide{&=} \forall \evt.t \in \Mch \qdot
@@ -1324,6 +1288,51 @@
 
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{The Ensure Rule}
+  
+  \begin{Theorem}[The ensure-rule] For all state predicates $p$ and $q$,
+    \label{thm:ensure-rule}
+    \begin{equation}
+      \label{eq:ensure-rule}
+      \alert<5>{(\predP \un \predQ)} \wide\land \alert<3>{((\predP
+        \land \neg \predQ) \leadsto (\neg P \lor Q))}
+      \WIDE\limp (\predP \leadsto \predQ)
+      \tag{ENS}
+    \end{equation}
+    
+    \begin{center}
+      \input{tikz-ensure-rule}
+    \end{center}
+  \end{Theorem}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The specification of the controller}
+
+  \begin{Bcode}
+    $
+    \ubevent{\ctrlplf}{\platform}{
+      \platform \in \PLATFORM \land
+      \platform \in \ran.\location \land
+      \Exit \notin \ran.\location \land \\
+      \forall q \qdot q \in \PLATFORM \limp \signal.q = \RED
+    }
+    {
+      \platform \in \PLATFORM \land
+      \platform \in \ran.\location \land
+      \signal.\platform = \RED
+    }
+    {
+      \Exit \notin \ran(\location) \land
+      \forall q \qdot q \in \PLATFORM \land q \neq \platform \limp \signal.q = \RED
+    }
+    {\signal.\platform \bcmeq \GREEN}
+    $
+  \end{Bcode}
+\end{frame}
+\end{document}
 
 %%% Local Variables: 
 %%% mode: latex

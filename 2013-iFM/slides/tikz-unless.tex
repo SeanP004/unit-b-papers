@@ -18,7 +18,7 @@
 
 \providecommand{\until}{\mathop{\mathcal{U}}}
 \begin{tikzpicture}[scale=0.5]
-  \draw (-4,2) node[minimum width=3cm]{$P \limp P \until Q$};
+  \draw (-4,2) node[minimum width=3cm]{$\always(P \limp P \until Q)$};
   \draw (2,2) node(t1)[circle, draw, fill=blue!20!white, inner sep =
   2pt, minimum width=0.5cm]{$P$};
   \draw (4,2) node(t2)[circle, draw, fill=blue!20!white, inner sep =
@@ -34,7 +34,7 @@
   \draw[dashed] (t4) -- (10,2);
 
   \draw (-4,1) node[minimum width=3cm]{or};
-  \draw (-4,0) node[minimum width=3cm]{$P \limp \always P$};
+  \draw (-4,0) node[minimum width=3cm]{$\always(P \limp \always P)$};
   \draw (2,0) node(s1)[circle, draw, fill=blue!20!white, inner sep =
   2pt, minimum width=0.5cm]{$P$};
   \draw (4,0) node(s2)[circle, draw, fill=blue!20!white, inner sep =

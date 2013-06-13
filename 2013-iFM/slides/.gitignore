@@ -1,7 +1,11 @@
 *.aux
+*.d
+*.fls
 *.log
+*.make
 *.nav
 *.out
 *.snm
 *.synctex.gz
+*.temp
 *.toc
