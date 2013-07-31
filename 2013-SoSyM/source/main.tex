@@ -1,0 +1,107 @@
+% !TEX root = progress-llncs.tex
+% Package for abbreviations.
+\usepackage{abbrev}
+
+% Some standard LaTeX packages.
+\usepackage{xspace}
+\usepackage{color}
+\usepackage{datetime}
+%\usepackage{space-llncs}
+
+% Package for common math symbols.
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Package for customized spacings
+\usepackage{space}
+
+% Package for reference
+\usepackage{varioref}
+
+% Use Times as the main fonts
+\usepackage{times}
+
+\usepackage{wrapfig}
+
+% Package for calculational proofs
+\usepackage{calculation}
+
+% Package for computation calculus
+\usepackage{comp-cal}
+
+% Package for relational calculus
+\usepackage{rel-cal}
+
+% Package for xspace
+\usepackage{xspace}
+
+% Package for UNITY
+\usepackage{unity}
+
+% Package for B symbols
+\usepackage{bsymb}
+
+%% Package for Event-B
+\usepackage[small]{eventB}
+
+% Package for TLA
+\usepackage{tla}
+
+% Package for Unit-B
+\usepackage{unitb}
+
+% Package for tikz
+\usepackage{tikz}
+\usetikzlibrary{snakes,arrows}
+
+% Package for requirement document
+\usepackage[compact]{reqdoc}
+
+%%%% Some macros used in formal models.
+
+\usepackage[plainpages=false]{hyperref}
+\hypersetup{
+  pdftitle={},
+  pdfauthor={Simon Hudon and Thai Son Hoang,
+    Department of Computer Science, York University, Toronto, Canada
+    and
+    Institute of Information Security, ETH Zurich, Switzerland
+  },
+  pdfsubject={Refinement, Progress},
+  pdfkeywords={Refinement, Progress, Temporal Logic},
+  colorlinks=false
+}
+
+\begin{document}
+
+\maketitle
+
+\input{abstract}
+
+% \setcounter{tocdepth}{4}
+% \tableofcontents
+
+\input{intro}
+
+\input{background}
+
+\input{contribution}
+
+\input{example}
+
+%\input{rel-work}
+
+\input{conclusion}
+
+\bibliographystyle{plain}
+\bibliography{progress}
+
+%\newpage
+%\listoftodos
+\end{document}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "progress"
+%%% End: 

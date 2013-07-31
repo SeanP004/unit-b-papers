@@ -1,0 +1,124 @@
+% !TEX root = progress-llncs.tex
+\section{Introduction}
+\label{sec:introduction}
+
+%%%%% Formal methods and refinement
+Developing systems satisfying their desirable properties is a
+non-trivial task.  Formal methods have been seen as a solution to the
+problem.  Given the increasing complexity of systems, many
+formal methods adopt refinement techniques, where systems are
+developed step-by-step in a property-preserving manner.  In this way,
+a system's details are gradually introduced into its design in
+a hierarchical development.
+
+%%%%% System properties: safety v.s. liveness
+System properties are often put into two classes: \emph{safety}
+and \emph{liveness}~\cite{DBLP:journals/tse/Lamport77}.  A safety
+property ensures that undesirable behaviours will never happen
+during the system executions.  A liveness property guarantees that
+eventually desirable behaviours will happen.  Ideally, systems should
+be developed in such a way that they satisfy both their safety and liveness
+properties.  Although safety properties are often considered the most
+important ones, we argue that having \emph{live} systems is also important.
+A system that is safe but not live is useless.  For example, consider
+an elevator system that does not move. Such an elevator system is safe
+(nobody could ever get hurt), yet useless.  According to a
+survey~\cite{DBLP:conf/icse/DwyerAC99}, liveness properties (in terms
+of \emph{existence} and \emph{progress}) amount to 45\% of the overall
+system properties.
+
+%%%%% Motivation: Refinement with liveness properties.
+In most refinement-based development methods such as (B, Event-B, VDM,
+Z) the focus is on preserving safety properties.  A possible problem
+for such safety-oriented methods is that when applying them to design a
+system, we can make the design so safe that it becomes unusable.  It is
+hence our aim to design a refinement framework preserving both safety
+and liveness properties.
+
+Some modelling methods such as UNITY~\cite{DBLP:books/daglib/0067338}, 
+include the capability of reasoning about liveness properties.  In UNITY, there is a clear
+distinction between specifications (temporal properties) and programs
+(transition systems).  Refinement in \unity involves transforming
+specifications according to the \unity logic.  At the end of the
+refinement process, one obtains several temporal properties which then
+can be implemented by some program fragments according to
+well-defined rules.  As a result, programs (transition systems) in
+\unity are not part of the design, they are the output of the
+refinement process.  A disadvantage of this approach is that the
+transformation of temporal properties can make the
+choice of refinements hard to understand.  In order to overcome 
+this limitation, we unified the notion of specification and that of
+program, making smoother the transition from one to the other.
+
+%%%%% Contribution: Unit-B
+In this paper, we present a formal method, namely
+\unitb~\cite{thesis/hudon2011}, inspired by
+\unity~\cite{DBLP:books/daglib/0067338} and
+\eventB~\cite{DBLP:books/daglib/0024570}.  We borrow the ideas of
+system development from \eventB, in which a series of models is
+constructed and linked by refinement relationships.  The temporal
+logic that we use to specify and to reason about progress properties
+is based on \unity.  
+
+The main attraction of our method is that it
+incorporates the reasoning about safety and liveness properties within
+a single refinement framework.  Furthermore, our approach features the 
+novel notions of coarse- and fine-schedules, a generalisation of the 
+standard weak- and strong-fairness assumptions.
+They allow us (1) to reason about the satisfiability of
+progress properties by a given model, and (2) to refine a given model
+while preserving liveness properties.  
+This makes it possible in \unitb to introduce liveness properties at any stage of 
+the development process. Subsequently, not only does it rule
+out any design that would be too conservative, but it also justifies
+design decisions.  As a result, liveness properties, in particular
+progress properties, act as a design guideline for developing
+systems.
+
+We give a semantics for \unitb models and their properties using
+computation calculus~\cite{Dijkstra:1998p1128}.  This enables us to
+formally prove the rules for reasoning about properties and refinement
+relationship in \unitb.
+
+ % the approach\todo{what approach??} even in cases where progress is not violated during refinement.  The introduction of a progress property can be done at any stage during the development of a system.  More to the point, a progress property can be introduced at the same time as the objects it relates to.  The consequence is not only to prevent the design to be too conservative but also to motivate and justify many design decisions which in \eventB are usually left informal and vague.  
+
+% \eventB is an state based formal method which allows us to design reactive systems by stepwise refinement. One of the benefits of such an approach is to impose safety properties early in the development of a system in such a way that no valid refinement step can violate them.  Although safety is by and large considered the most important ones, \todo{ citation needed (Lamport et al. liveness manifesto) } we argue that the loss incurred by neglecting liveness is twofold: not only do we not have a proof that the system under consideration continuously produces results but, when we design it, we can make it so safe as to make it useless, especially when proceeding by refinement.
+
+% In his book,\cite{DBLP_books_aw_Lamport2002} Lamport argues that very little time needs to be spent on liveness because safety eliminates far more bugs \todo{check citation}.
+
+% If we apply the advice to stepwise refinement, we get a problem well-known in \eventB.  Since the proof obligations only concerns the preservation of safety, in the process of refinement, one goes beyond the call of safety and blocks all possible progress before a final goal has been reached.  It is our intention to improve upon this state of affair.  
+
+% In the design a complex system, it is useful to focus on meeting proof obligations as simply as possible, this allows us to concentrate on small aspects of the system at a time.  We can therefore increase the proof obligations to make refinement preserve progress.  This way, refinement steps that would prevent progress in any way would be invalid.
+
+% \todo{ define what is meant by "introducing a property" }
+
+
+% Lacking any support for liveness properties, \eventB does not allow such flexibility in the design process.  The scheduling aspects are left to the end of the design where a lot of usually irrelevant details are already present in the design.  This makes the design of a scheduler more difficult. 
+% \todo{ check the nuances between progress and liveness }
+
+% The contribution of the present paper is about a formal method for the
+% design of concurrent programs.  It is inspired by the \unity and
+% \eventB formal methods which are both event based.  The temporal logic
+% used to specify progress properties is taken from \unity and
+% formalised using Dijkstra's computation calculus which we also use to
+% formalize a progress preserving refinement order
+% \cite{thesis/hudon2011}.  Furthermore, we offer a method relying on
+% the above logical apparatus and which makes use of the temporal
+% properties and the refinement order to design concurrent programs that
+% are correct by construction.  \todo{references}
+
+%%%%% Structure
+\paragraph{Structure} The rest of the paper is organised as follows.
+In Section~\ref{sec:background}, we review Dijkstra's computation
+calculus \cite{Dijkstra:1998p1128} which we used to formulate our
+semantics and design our proofs.  We follow with a description of the
+\unitb method (Section~\ref{sec:contribution}).  The method and its
+refinement rules are demonstrated by an example in
+Section~\ref{sec:example}.  We summarise our work in 
+Section~\ref{sec:conclusion} including discussion about related work
+and future work.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "progress"
+%%% End: 

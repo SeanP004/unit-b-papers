@@ -1,0 +1,670 @@
+% !TEX root = progress-llncs.tex
+\section{The Unit-B Method}
+\label{sec:contribution}
+\newBmch[Mch]{M}
+\newBevt[evt]{e}
+%\newBcst[initpred]{i}
+
+This section presents our contribution: the \unitb method which is
+inspired by \eventB and \unity.
+% methodology
+Similar to \eventB, \unitb is aimed at the design of software systems
+by stepwise refinement.  It differs from \eventB by the capability of
+reasoning about progress properties and its refinement-order which
+preserves liveness properties.  It also differs from \unity by
+unifying the notions of programs and specifications, allowing
+refinement of programs.  
+
+\subsection{Syntax}
+Similar to \eventB, a \unitb system is modelled by a transition system,
+where the state space is captured by variables $v$ and the transitions are
+modelled by guarded events.  Furthermore, \unitb has additional 
+assumptions on how the events should be scheduled.  Using
+an \eventB-similar syntax, a \unitb event has the following form:
+\begin{equation}
+  \small
+  \ubeventinline{\evt}{t}{\guard.t.v}{\csched.t.v}{\fsched.t.v}{\assignment.t.v.v'}~,\label{eq:ubevent}
+\end{equation}
+where $t$ are the parameters, $\guard$ is the \emph{guard}, $\csched$
+is the \emph{coarse-schedule}, $\fsched$ is the \emph{fine-schedule},
+and $\assignment$ is the \emph{action} changing state variables $v$.
+The action is usually made up of several \emph{assignments}, either
+deterministic ($\bcmeq$) or non-deterministic ($\bcmsuch$).
+%  We use
+%the short form
+% \begin{equation}
+%   \small
+%   \ubeventinline{evt}{}{\guard.v}{\csched.v}{\fsched.v}{\assignment.v.v'}~,\label{eq:ubevent-no-par}
+% \end{equation}
+% for events without parameters, and
+% \begin{equation}
+%   \small
+%   \ubeventinline{evt}{}{}{\csched.v}{\fsched.v}{\assignment.v.v'}~,\label{eq:ubevent-no-grd}
+% \end{equation}
+% for events without parameters and guard (the guard is $\one$).
+An event $\evt$ with parameters $t$ stands for multiple events.
+Each corresponds to several non-parameterised events $\evt.t$, one for
+each possible value of the parameter $t$.  Here $\guard$, $\csched$,
+$\fsched$ are state predicates.  An event is said to be
+enabled when the guard $\guard$ holds.  The scheduling assumption of
+the event is represented by $\csched$ and $\fsched$ as follows: if
+$\csched$ holds for infinitely long and $\fsched$ holds infinitely
+often then the event is carried out infinitely often.  An event
+without any scheduling assumption will have its coarse-schedule
+$\csched$ equal to $\cfalse$.  An event having only the
+coarse-schedule $\csched$ will have the fine-schedule to be $\one$.
+Vice versa, an event having only the fine-schedule $\fsched$ will
+have the coarse-schedule to be $\one$.%
+% \todo{Son: (to Simon) Please make sure this convention makes sense. It
+% is different from your thesis.}%
+% \todo{Simon: (to Son) On page 69 of my thesis, after equation (3.7), we
+% see the exact mapping that you showed above}%
+
+In addition to the variables and the events, a model has an
+initialisation state predicate \init constraining the initial value of
+the state variables.
+%A special event containing only action is used as the initialisation
+%of the model.  
+All computations of a model start from a state satisfying the
+initialisation and are such that, at every step, either one of its
+enabled events occurs or the state is unchanged, and each computation
+satisfies the scheduling assumptions of all events.
+%\todo{
+% Simon: (to Son) On terminology. Above, in the section ``then'', 
+% you call the part assignment and here, you call it action. My suggestion
+% would be to call each of the individual clauses like $x' = x + y$ ``assignments''
+% and call their conjunction ``actions''. 
+% Second point: the initialization should 
+% simply be a satisfiable state predicate. If we make it into an event, we're 
+% stripping it of everything but the state predicate which we encode as a
+% peculiar binary relation $R$ over states: one where $\qforall{x,y}{}{x(R)z \eqv y(R)z}$  }%
+
+Properties of \unitb models are captured by two types of properties:
+\emph{safety} and \emph{progress} (liveness).
+
+\subsection{Semantics} We are going to use computation calculus to
+give the semantics of \unitb models.  Let $\Mch$ be a \unitb model
+containing a set of events of the form~\eqref{eq:ubevent} and an
+initialisation predicate $\init$.  
+%The initialisation $\init$ characterizes the set
+%of initial states, corresponds a state predicate $\initpred$.
+Since the action of the event can be described by a before-after
+predicate $\assignment.t.v.v'$, it corresponds to an atomic action
+$\Action.t ~=~ \qforall{e}{}{\initially (e = v) ~\limp~ \X \, ;
+  \assignment.t.e.v}$%
+%\footnote{%
+%  Son: We can define this as $\qforall{e}{}{\initially (e = v) \limp
+%    \X;S(t,e,v)}$%
+%}%
+.  Given that an event $\evt.t$ can only be carried out when it is
+enabled, the effect of each event execution can therefore be
+formulated as follows: $\action.(\evt.t) = \guard.t\,;\,\Action.t$.
+% \todo{Son: (to Simon) I changed $\guard$ to $\guard.t$}
+% \todo{Simon: (to Son) Good, I adjusted the spacing to make clearer that $.$ binds tighter than $;$}
+A special constant $\SKIP$ is used to denote the atomic action that
+does not change the state.
+\begin{Definition}[Constant $\SKIP$]
+  $\SKIP.\tau  \Wide{\eqv}  \size \tau \!=\! 2 \wide\land \tau.0\! =\! \tau.1$,
+  for all traces $\tau$ ($\tau.0$, $\tau.1$ denotes the first two
+  elements of $\tau$).
+\end{Definition}
+
+% \todo{Son: (to Simon) I would like to use $=$ instead of $\ew{\eqv}$}
+% \todo{Simon: (to Son) That can work. You have to be careful with $=$ 
+% when you open and close $\ew{ } $ many times in a formula. My advice
+% would be (0) to explicitly state that $=$ and $\ew{\eqv}$ are equivalent 
+% notations and (1) to use $=$ only in the case where the $\ew{ \_ }$ would
+% include all the formula at hand.}
+
+The semantics of \Mch is given by a computation predicate $\execution.\Mch$
+which is a conjunction of a ``safety part'' $\safety.\Mch$ and a
+``liveness part'' $\liveness.\Mch$, i.e., 
+\begin{equation}
+  \ew{\execution.\Mch \Wide{\eqv} \safety.\Mch \land \liveness.\Mch}~.\label{eq:execution}
+\end{equation}
+A property represented by a formula $s$ is satisfied by \Mch, if
+\begin{equation}
+  \ew{\execution.\Mch \limp s}~.\label{eq:property}
+\end{equation}
+
+\subsubsection{Safety} Below, we define the general form of one step
+of execution of model \Mch and the \emph{safety} constraints on its
+complete computations.
+%A step of model \Mch is captured by the following
+%atomic action:
+\begin{align}
+  \ew{\step.\Mch  \Wide{&\eqv} \qexists{\evt, t}{\evt.t \in \Mch}{\action.(\evt.t)} \,\lor\, \SKIP} \label{eq:step} \\
+%\end{equation}
+%Together with the initialisation, $\safety.\Mch$ is defined as follows:
+%\begin{equation}
+  \ew{\safety.\Mch  \Wide{&\eqv}  \initially \init \land
+    \G(\step.\Mch \, ; \,\ctrue)}
+\end{align}
+% \todo{Simon: (to Son) I would rather not differentiate between $\initpred$ and
+% $\init$. I would also prefer to use the name $\init$ everywhere. $i$ seems more
+% suitable as a bound variable.}
+% 
+
+Safety properties of the model are captured by \emph{invariance} properties
+(also called \emph{invariants}) and by \emph{unless} properties. 
+
+An invariant $I.v$ is a state-properties that hold at every reachable state of the model.
+In order to prove that $I.v$ is an invariant of $\Mch$,
+we prove that $\ew{\execution.\Mch \wide{\limp} \G \initially \! I}$.
+In particular, we rely solely on the safety part of the model to prove
+invariance properties, i.e., we prove $\ew{\safety.\Mch \wide{\limp} \G
+  \initially \! I}$.  This leads to the well-known invariance principle.
+\begin{equation}
+  \begin{array}{ll}
+    & \ew{\init \limp I} \wide{\land} 
+    \ew{\qforall{\evt, t}{\evt.t \in \Mch}{I \, ;  \action.(\evt.t) ~\limp~ \X;I}} \\
+    \implies & \\
+    & \ew{\safety.\Mch \limp \G \initially \! I}
+  \end{array}
+  \tag{INV}
+\end{equation}
+Invariance properties are important for reasoning about the correctness
+of the models since they limit the set of reachable states.  In
+particular, invariance properties can be used as additional
+assumptions in proofs for progress properties.
+
+The other important class of safety properties is defined by the
+\emph{unless} operator $\un$.
+\begin{Definition}[$\un$ operator]  For all state predicates $p$ and
+  $q$,
+  \begin{equation}
+    \label{eq:un-def}
+    \ew{(p \un q) \WIDE{\eqv} \G (\initially p \wide\limp (\G \initially \! p)\,;(\one \lor \X)\,;\initially q)}
+  \end{equation}
+\end{Definition}
+Informally, $p \un q$ is a safety property stating that if condition
+$p$ holds then it will hold continuously unless $q$ becomes true.
+The formula $(\one \lor \X)$ is used in \eqref{eq:un-def} to allow
+the last state where $p$ holds and the state where $q$ first holds to 
+either be the same state or to immediately follow one another.
+% \todo{Son: (to Simon) Is this explanation about $\un$ clear?}
+% \todo{Simon: (to Son) Is this clearer?}
+The following theorem is used for proving that a \unitb model
+satisfies an unless property.
+\begin{Theorem}[Proving an $\un$-property]
+  \label{thm:unless}
+  Consider a machine \Mch and property $p \un q$.  If
+  \begin{equation}
+    \label{eq:un-rule}
+    \qforall{\evt,t}{\evt.t \in \Mch}{\, \G \!(\,(p \, \land \! \spneg q) ; \!
+      \action.(\evt.t);\!\ctrue ~\,\limp\,~ \X ; \! (p \lor q);\! \ctrue \,)}
+  \end{equation}
+% \todo{Simon: (to Son) be careful, $;$ binds tighter than the 
+% 	logical connectives so $s\,; (t \land u)$ and $s\, ; t \,\land\, u$
+% 	are vastly different}
+  then $\ew{\execution.\Mch \wide\limp p \un q}$
+\end{Theorem}
+\begin{proof}[Sketch]
+  Condition \eqref{eq:un-rule} ensures that every event of \Mch either
+  maintains $p$ or establishes $q$. By induction, we can see that the
+  only way for $p$ to become false after a state where it was true is
+  that either $q$ becomes true or that it was already true.
+\end{proof}
+
+\subsubsection{Liveness}
+For each event of the form~\eqref{eq:ubevent}, its schedule
+$\schedule.(\evt.t)$ is formulated as follows, where $\csched$ and
+$\fsched$ are the event's coarse- and fine-schedule, respectively.
+\begin{equation}
+  \label{eq:schedule}
+  \ew{\schedule.(\evt.t) \WIDE{\eqv} \G (\G \initially \!\csched
+      \,\land\, \G \F\,;\initially \fsched  \wide{\limp} 
+      \F\,;\fsched\,;\action.(\evt.t)\,;\ctrue)}~.
+\end{equation}
+To ensure that the event $\evt.t$ only occurs when it is enabled, we
+require the following \emph{feasibility} condition:
+\begin{equation}
+  \label{eq:fis}
+  \ew{\execution.\Mch \Wide{\limp} \G \initially \!(c \land f \, \limp\, g)}
+  \tag{SCH-FIS}
+\end{equation}
+
+Our scheduling is a generalisation of the standard weak-fairness and
+strong-fairness assumptions. The standard \emph{weak-fairness}
+assumption for event $\evt$ (stating that if the event is enabled
+infinitely long then eventually it will be taken) can be formulated
+by using $\csched = \guard$ and $\fsched = \one$.
+Similarly, the standard \emph{strong-fairness} assumption for $\evt$
+(stating that if the event is enabled infinitely often then eventually
+it will be taken) can be formulated by using $\csched = \one$ and
+$\fsched = \guard$.
+\begin{align}
+  \ew{ \wf.(\evt.t)  &\equiv \G (\G \bullet \guard \1\implies
+    \F;\action.(\evt.t);\ctrue) } \\
+  \ew{ \strf.(\evt.t)  &\equiv \G (\G \F;\bullet \guard \1\implies \F;\action.(\evt.t);\ctrue) }
+\end{align}
+
+
+
+The liveness part of the model is the conjunction of the schedules for its
+events, i.e.,
+\begin{equation}
+  \label{eq:liveness}
+  \ew{\liveness.\Mch \Wide{\eqv} \qforall{\evt, t}{\evt.t \in \Mch}{\schedule.(\evt.t)}}~
+\end{equation}
+
+% semantics
+% We will now discuss the semantics of the temporal logic we will be
+% using, the semantics of our notion of program and the definition of
+% refinement together with some rules.  All the semantics is expressed
+% using computation calculus \cite{Dijkstra:1998p1128}.  For the sake of
+% brevity, the proofs of the various properties of the semantics are
+% omitted but they can be found in \cite{thesis/hudon2011}.
+
+\subsection{Progress Properties}
+\label{sec:progress-properties}
+Progress properties are of the form $p \leadsto q$, where
+$\leadsto$ is the leads-to operator.
+\begin{Definition}[$\leadsto$ operator] For all state predicates $p$
+  and $q$,
+  \begin{equation}
+    \label{eq:leadsto}
+    \ew{(p \leadsto q) \WIDE{\eqv} \G (\initially p \wide{\limp} \F \initially \! q) }
+  \end{equation}
+\end{Definition}
+In this paper, properties and theorems are often written without
+explicit quantifications: these are universally quantified over all
+values of the free variables occurring in them.
+
+Important properties of $\leadsto$ are as follows. For state
+predicates $p$, $q$, and $r$, we have:
+%\begin{equation}
+%  \label{eq:leadsto-one}
+%  \ew{ p \leadsto \one}
+%\end{equation}
+% \todo{Simon: (to Son) Do you really need $p \leadsto \one$? We could
+%   put disjunction instead}
+\begin{align}
+%  \label{eq:disjunction}
+%  \ew{ \qexists{i}{}{p.i} \leadsto q \WIDE{&\eqv} \qforall{i}{}{p.i \leadsto q}
+%  }\tag{Disjunction} \\
+%  \label{eq:lhs-antimon}
+%  \ew{ \G \initially\!(p \limp q) \WIDE{\limp} (\,(q \leadsto r) \wide{& \limp} (p \leadsto r)\,) }
+%  \tag{LHS-Antimonotonicity}\\
+  \ew{ (p \limp q) \WIDE{&\limp} (p \leadsto q)
+  }\tag{Implication}\label{eq:implication} \\
+  \ew{ (p \leadsto q) \land (q \leadsto r) \WIDE{&\limp} (p \leadsto r)
+  }\tag{Transitivity}\label{eq:transitivity}
+  \\
+  \label{eq:37} 
+  \ew{ (p \leadsto q)  \WIDE{&\eqv}  (p \,\land \! \spneg q \Wide{\leadsto} q)
+  }\tag{Split-Off-Skip}
+\end{align}
+% \todo{Son: (to Simon) Think about the name for
+%   \eqref{eq:37}}
+
+The main tool for reasoning about progress properties in \unitb is the \emph{transient operator} $\tr$. 
+\begin{Definition}[$\tr$ operator] For all state predicate $p$, $\ew{\tr p \Wide{\eqv} \G \F \, ;\initially\! \spneg p}$.
+%  \begin{equation}
+%    \ew{\tr p \Wide{\eqv} \G \F \, ;\initially\! \spneg p}~.\label{eq:transient}
+%  \end{equation}
+\end{Definition}
+$\tr p$ states that state predicate $p$ is infinitely often false.
+The relationship between $\tr$ and $\leadsto$
+is as follows:
+\begin{equation}
+  p \wide{\leadsto} \spneg p  \WIDE{=} \one \wide{\leadsto} \spneg p \WIDE{=}
+  \tr p~.
+  \label{eq:trans-prop}
+\end{equation}
+
+The attractiveness of properties such as $\tr p$ is that we can
+\emph{implement} these using a single event as follows.
+\begin{Theorem}[Implementing $\tr$]
+  \label{thm:transient} Consider a \unitb model \Mch and a transient
+  property $\tr p$. We have
+  $\ew{\execution.\Mch \limp \tr p}$, if there exists an event 
+  \[\ubeventinline{\evt}{t}{\guard.t.v}{\csched.t.v}{\fsched.t.v}{\assignment.t.v.v'}~,\]
+  that is to say $\execution.\Mch$ entails:
+  \begin{equation}
+  	\label{eq:LIVE}
+  	\G (\G \initially \!c \land \G \F\,;\initially f \wide{\limp} \F\,; f\, ; \action.(\evt.t) ) ~ ,
+  	\tag{LIVE}
+  \end{equation}
+  and parameter $t$ such that $\evt.t \in \Mch$ and $\execution.\Mch$ entails each of the conditions below:
+  \begin{equation}
+    \G \initially\!(p \limp \csched)~,\label{eq:SCH}
+    \tag{SCH}
+  \end{equation}
+  \begin{equation}
+    \csched \leadsto \fsched~,\label{eq:OP}
+    \tag{PRG}
+  \end{equation}
+  \begin{equation}
+    \G (~ (p \land \csched \land \fsched)\,; \action.(\evt.t) \, ; \ctrue \wide{\wide\limp} \X\,; \initially \! \spneg p~)~.
+    \tag{NEG}
+    \label{eq:NEG}
+  \end{equation}
+\end{Theorem}
+\begin{proof}
+  In this case, $\G$ acts as an everywhere operator which allows us to
+  prove $\F;\initially \spneg p$ instead of $\G \F;\! \initially \!
+  \spneg p$.  Additionally, since $\ew{ \neg s \limp s \wide{\eqv} s
+  }$ for any computation predicate $s$, we discharge our proof
+  obligation by strengthening $\F\; ; \, \initially \! \spneg p$ to
+  its negation, $\G \initially \! p$.
+    \begin{calculation}
+    	\F \, ; \initially\! \spneg p
+    \hint{\follows}{ $\ew{ \F\,;\X \limp \F}$, aiming for \eqref{eq:NEG} }
+    	\F \, ; \X \, ; \initially \! \spneg p
+    \hint{\follows}{ \eqref{eq:NEG} }
+    	\F\, ; (p \land c \land f) \, ; \action \, ; \ctrue
+    \hint{\follows}{ computation calculus }
+%    	\F\, ; (~(c \land f) ; \! \action ; \! \ctrue \wide{\land} \initially \!\!\, p~)
+%    \hint{\follows}{ $\G$ is strengthening then persistence rule }
+	\F ;\! f ; \! \action ; \! \ctrue \wide{\land} \G \initially \! c \wide{\land} \G \initially \! p
+    \hint{\follows}{ \eqref{eq:LIVE}; $\G$ is conjunctive }
+    	\G  \F ; \! \initially f \wide{\land} \G \initially\! c \wide{\land} \G \initially \! p
+    \hint{=}{ \eqref{eq:OP} }
+    	\G \initially \! c \wide{\land} \G \initially \! p
+    \hint{=}{ $\G$ is conjunctive; \eqref{eq:SCH} }
+    	\G \initially \! p
+    \end{calculation}
+%  We prove $\tr p$ under the assumption $\execution.\Mch$.
+%
+%  First, we prove that $\G \initially p \limp \G \initially \csched$
+%  as follows.
+%  \begin{Reason}
+%    \Step{}{\execution.\Mch}
+%    \StepR{$\limp$}{~\eqref{eq:SCH}}{
+%      \G \initially(p \limp \csched)
+%    }
+%    \StepR{$\limp$}{$\G$ is monotonic \eqref{eq:g-monotonic}}{
+%      (\G \initially p \limp \G \initially \csched)
+%    } 
+%  \end{Reason}
+%  
+%  Second, we prove
+%  that $ (\G \initially \csched \limp \G \F;\initially \fsched)$ as
+%  follows.
+%  \begin{Reason}
+%    \Step{}{\execution.\Mch}
+%    \StepR{$\limp$}{\eqref{eq:OP}}{
+%      \csched \leadsto \fsched
+%    }
+%    \StepR{=}{Definition \eqref{eq:leadsto}}{
+%      \G (\initially \csched \limp \F;\initially \fsched)
+%    }
+%    \StepR{$\limp$}{$\G$ is strengthening}{
+%      (\initially \csched \limp \F;\initially \fsched)
+%    }
+%    \StepR{$\limp$}{$\G$ is monotonic}{
+%      (\G \initially \csched \limp \G \F;\initially \fsched)
+%    }
+%  \end{Reason}
+%  Furthermore, we have $\G (\G \initially p \wide{\limp} \G
+%      \F\,;(p \land \csched \land \fsched)\,;\action.(\evt.t)\,;\ctrue)$ according to the following
+%      reasoning.
+%  \begin{Reason}
+%    \Step{}{\execution.\Mch}
+%    \StepR{$\limp$}{Definition \eqref{eq:execution}}{\liveness.\Mch}
+%    \StepR{$\limp$}{Definition
+%      \eqref{eq:liveness}}{\schedule.(\evt.t)}
+%    \StepR{$=$}{Definition \eqref{eq:schedule}}{
+%      \G (\G \initially \csched
+%      \land \G \F;\initially \fsched  \wide{\limp} \G
+%      \F;\fsched;\action.(\evt.t);\ctrue)      
+%    }
+%    \StepR{$=$}{$\G \initially \csched \limp \G \F;\initially \fsched$}{
+%      \G (\G \initially \csched \wide{\limp} \G
+%      \F;\fsched;\action.(\evt.t);\ctrue)      
+%    }
+%    \StepR{$=$}{$\G \initially \csched$}{
+%      \G (\G \initially \csched \wide{\limp} \G
+%      \F;\csched \land \fsched;\action.(\evt.t);\ctrue)      
+%    }
+%    \StepR{$\limp$}{$\G \initially p \limp \G \initially \csched$}{
+%      \G (\G \initially p \wide{\limp} \G
+%      \F;\fsched;\action.(\evt.t);\ctrue)      
+%    }
+%    \StepR{$\limp$}{$\G \initially p$}{
+%      \G (\G \initially p \wide{\limp} \G
+%      \F;p \land \csched \land \fsched;\action.(\evt.t);\ctrue)      
+%    }
+%    \StepR{$\limp$}{~\eqref{eq:NEG}}{
+%      \G (\G \initially p \wide{\limp} \G
+%      \F;\X;\spneg p;\ctrue)
+%    }
+%    \StepR{$\limp$}{$\F;\X \limp \F$}{
+%      \G (\G \initially p \wide{\limp} \G
+%      \F;\spneg p;\ctrue)
+%    }
+%  \end{Reason}
+%
+%  Finally, we have
+%  \begin{Reason}
+%    \Step{}{(\G (\G \initially p \wide{\limp}  \G
+%      \F;\spneg p;\ctrue) \Wide{\limp} \tr p)}
+%    \StepR{=}{Definition of $\tr$ \eqref{eq:transient}}{
+%      (\G (\G \initially p \wide{\limp}  \G
+%      \F;\spneg p;\ctrue) \Wide{\limp} \G \F;\spneg p;
+%      \true)
+%    }
+%    \StepR{$\follows$}{$\G$ is monotonic}{
+%      ((\G \initially p \wide{\limp}  \G
+%      \F;\spneg p;\ctrue) \Wide{\limp} \F;\spneg p; \true)
+%    }
+%    \WideStepR{=}{$\G \initially p  = \neg (\F;\spneg p; \true)$}{
+%      ((\G \initially p \wide{\land}  \G
+%      \F;\spneg p;\ctrue) \land \G \initially p \Wide{\limp} \F;\spneg p; \true)
+%    }
+%    \StepR{$\follows$}{Predicate logic}{
+%      (\G \F;\spneg p;\ctrue \Wide{\limp} \F;\spneg p; \ctrue)
+%    }
+%    \StepR{=}{$\G$ is strengthening \eqref{eq:g-strengthen}}{
+%      \ctrue
+%    }
+%  \end{Reason}
+\end{proof}
+(Due to space restriction, for the rest of this paper, we only present
+sketch of proofs of theorems. Detailed proofs are available
+in~\cite{thesis/hudon2011}).
+
+Condition \eqref{eq:SCH} is an invariance property. Condition
+\eqref{eq:OP} is a progress property.  Condition \eqref{eq:NEG} states
+that event $\evt.t$ establish $\spneg p$ in one step.  In practice,
+often we design $\csched$ such that it is the same as $p$ and
+$\fsched$ is $\one$ (i.e., omitting $\fsched$); as a result,
+conditions \eqref{eq:SCH} and \eqref{eq:OP} are trivial.  Condition
+\eqref{eq:NEG} can take into account any invariance property $I$ and
+can be stated as $\ew{(I \land p \land \csched \land \fsched)\; ;
+  \action.(\evt.t) ~\limp~ \X; \spneg p}$.
+
+In general, progress properties can be proved using the following
+\emph{ensure-rule}.  The rule relies on proving an unless property and
+a transient property.
+\begin{Theorem}[The ensure-rule] For all state predicates $p$ and $q$,
+  \label{thm:ensure-rule}
+  \begin{equation}
+    \label{eq:ensure-rule}
+    \ew{(p \un q) \land (\tr p \land \spneg q)  \WIDE\limp (p \leadsto q)}
+  \end{equation}
+\end{Theorem}
+\begin{proof}[Sketch]
+  $p \un q$ ensures that if $p$ holds then it will hold for infinitely long or
+  eventually $q$ holds.  If $q$ holds eventually then we have $p
+  \leadsto q$.  Otherwise, if $p$ holds for infinitely long and $\spneg q$
+  also hold for infinitely long, we have a contradiction, since $\tr p \land
+  \spneg q$ ensures that eventually $p \land \spneg q$ will be
+  falsified.  As a result, if $p$ holds for infinitely long then eventually
+  $q$ has to hold.
+\end{proof}
+
+\subsection{Refinement}
+\label{sec:refinement}
+\newBmch[cncMch]{N}
+
+In this section, we develop rules for refining \unitb models such that
+safety and liveness properties are preserved.  Consider a machine \Mch
+and a machine \cncMch, \cncMch refines \Mch if
+\begin{equation}
+  \label{eq:ref}
+  \ew{\execution.\cncMch \limp \execution.\Mch}~.
+  \tag{REF}
+\end{equation}
+As a result of this definition, any property of \Mch is also satisfied
+by \cncMch.  Similarly to \eventB, refinement is considered in \unitb
+on a per event basis.  Consider an abstract event $\evt.t$ belong to
+\Mch and a concrete event $\cncevt.t$ belong to \cncMch as follows.
+\begin{gather}
+  \ubeventinline{\evt}{t}{\guard.t.v}{\csched.t.v}{\fsched.t.v}{\assignment.t.v.v'}\label{eq:absevt} \\
+  \ubeventinline{\cncevt}{t}{\cncguard.t.v}{\cnccsched.t.v}{\cncfsched.t.v}{\cncassignment.t.v.v'}\label{eq:cncevt}
+\end{gather}
+We have $\cncevt.t$ is a refinement of $\evt.t$ if
+\begin{align}
+  \label{eq:evt-safety}
+  \ew{\execution.\cncMch ~&\limp~ (\action.(f.t) \limp \action.(e.t))}~, \textrm{and}
+  \tag{EVT-SAF}\\
+  \label{eq:evt-live}
+  \ew{\execution.\cncMch ~&\limp~ (\schedule.(f.t) \limp \schedule.(e.t))}
+  \tag{EVT-LIVE}
+\end{align}
+A similar rule is presented for the initialisation.  The proof that
+\cncMch refines \Mch (i.e., \eqref{eq:ref}) given conditions such as
+\eqref{eq:evt-safety} and \eqref{eq:evt-live} is left out.  A special
+case of event refinement is when the concrete event \cncevt is a new
+event.  In this case, \cncevt is proved to be a refinement of a special
+\SKIP{} event which is unscheduled and does not change any abstract
+variables.
+
+Condition \eqref{eq:evt-safety} leads to similar proof obligations in
+\eventB such as \emph{guard strengthening} and \emph{simulation}.  We
+focus here on expanding the condition \eqref{eq:evt-live}.  The
+subsequent theorems are related to concrete event
+\cncevt~\eqref{eq:cncevt} and abstract event \evt~\eqref{eq:absevt},
+under the assumption that condition \eqref{eq:evt-safety} has been
+proved.  They illustrate different ways of refining event scheduling
+information: \emph{weakening the coarse-schedule}, \emph{replacing the
+  coarse-schedule}, \emph{strengthening the fine-schedule}, and
+\emph{removing the fine-schedule}.
+
+\begin{Theorem}[Weakening the coarse-schedule]
+  Given $\cncfsched = \fsched$. If
+  \begin{center}
+    $\ew{\execution.\cncMch \WIDE\limp \G \initially(\csched \limp
+      \cnccsched)}$ \WIDE{then} $\ew{\execution.\cncMch \limp
+      (\schedule.(\cncevt.t) \limp \schedule.(\evt.t))}$~.
+  \end{center}
+
+\end{Theorem}
+\begin{proof}[Sketch]
+  The coarse-schedule is at an anti-monotonic position within the definition of
+  $\schedule$.
+\end{proof}
+
+\begin{Theorem}[Replacing the coarse-schedule]
+  \label{thm:ref-rep-crs}
+  Given $\cncfsched = \fsched$.  If
+  \begin{align}
+    \ew{\execution.\cncMch &\Wide\limp \csched 
+         \wide\leadsto \cnccsched}\label{eq:crs} \\
+    \label{eq:unless}
+    \ew{\execution.\cncMch &\Wide\limp \cnccsched ~\un~ \spneg \csched}~,
+  \end{align}
+  then $\ew{\execution.\cncMch \limp (\schedule.(\cncevt.t) \limp \schedule.(\evt.t))}$
+\end{Theorem}
+\begin{proof}[Sketch]
+  Conditions~\eqref{eq:crs} and~\eqref{eq:unless} ensures that if $\csched$ holds
+  then eventually $\cnccsched$ holds and it will hold for at least as long as $\csched$
+  As a result, if
+  $\csched$ holds for infinitely long, $\cnccsched$ also holds for infinitely long.  Hence
+  the new schedule ensures that \cncevt occurs at least on those cases where \evt has to 
+  occur.
+\end{proof}
+
+\begin{Theorem}[Strengthening the fine-schedule]
+  \label{thm:strengthen-fns}
+  Given $\cnccsched = \csched$. If
+  \begin{align}
+    \label{eq:fns}
+    \ew{\execution.\cncMch \WIDE{&\limp} \G \initially(\cncfsched \limp
+      \fsched)}~, \textrm{and} \\
+    \label{eq:lts}
+    \ew{\execution.\cncMch \WIDE{&\limp} \fsched \wide\leadsto \cncfsched}
+  \end{align}
+  then $\ew{\execution.\cncMch \limp (\schedule.(\cncevt.t) \limp \schedule.(\evt.t))}$.
+\end{Theorem}
+\begin{proof}[Sketch] We can prove  
+  $\schedule.(\evt.t)$ under the assumptions 
+  $\schedule.(\cncevt.t)$ and $\execution.\cncMch$ 
+  by calculating from $\F \, ; (\csched \land \fsched) \, ; \action.(\evt.t)\, ; \ctrue$ 
+  (the right hand side of $\schedule.(\evt.t)$) and applying 
+  one assumption after the other (in this order \eqref{eq:fns}, 
+  \eqref{eq:evt-safety}, $\schedule.(\cncevt.t)$, \eqref{eq:lts}) 
+  to strengthen it to $\G \initially\! c \land \G \F\,;\initially\!f$ 
+  (the right hand side of $\schedule.(\evt.t)$).
+%     \begin{equation}
+%       \schedule.(\cncevt.t) \label{eq:sfs:cfs}
+%     \end{equation}
+%   and $\execution.\cncMch$
+%     \begin{calculation}
+%     	\F\,;(\csched\land \fsched)\,;\action.\evt \, ; \ctrue
+%     \hint{\follows}{ \eqref{eq:fns} }
+%     	\F\,;(\csched\land \cncfsched)\,;\action.\evt \, ; \ctrue
+%     \hint{\follows}{ \eqref{eq:evt-safety} }
+%     	\F\,;(\csched\land \cncfsched)\,;\action.\cncevt \, ; \ctrue
+%     \hint{\follows}{ \eqref{eq:sfs:cfs} and $\ew{ \F \eqv \F\,\F}$ }
+%     	\G \initially\! \csched \land \G \F ; \! \F  ; \! \initially \cncfsched
+%     \hint{\follows}{ \eqref{eq:lts} }
+%     	\G \initially\! \csched \land \G  \F  ; \! \initially \fsched
+%     \end{calculation}
+% 
+%%%Other proof
+%  \begin{Reason}
+%    \Step{}{\schedule.(\cncevt.t)}
+%    \StepR{$=$}{Definition (\ref{eq:schedule})}{
+%      \G (\G \initially \cnccsched \land \G \F;\initially
+%      \cncfsched \limp \G\F;\cncfsched;\action.(\cncevt.t);\ctrue)
+%    }
+%    \StepR{=}{\eqref{eq:lts}}{
+%      \G (\G \initially \cnccsched \limp \G\F;\cncfsched;\action.(\cncevt.t);\ctrue)
+%    }
+%    \StepR{$\limp$}{\eqref{eq:fns}}{
+%      \G (\G \initially \cnccsched \limp \G\F;\fsched;\action.(\cncevt.t);\ctrue)
+%    }
+%    \StepR{$\limp$}{assumption $\action.(f.t) \limp \action.(e.t)$}{
+%      \G (\G \initially \cnccsched \limp \G\F;\fsched;\action.(\evt.t);\ctrue)
+%    }
+%    \StepR{$\limp$}{$\cnccsched = \csched$}{
+%      \G (\G \initially \csched \limp \G\F;\fsched;\action.(\evt.t);\ctrue)
+%    }
+%    \StepR{$\limp$}{Predicate logic}{
+%      \G (\G \initially \csched \land \G \F;\fsched \limp \G\F;\fsched;\action.(\evt.t);\ctrue)
+%    }
+%    \StepR{$=$}{Definition (\ref{eq:schedule})}{
+%      \schedule.(\evt.t)
+%    }
+%  \end{Reason}
+\end{proof}
+
+\begin{Theorem}[Removing the fine-schedule]
+\label{thm:remove-fns}
+  Given $\cnccsched = \csched$ and $\cncfsched = \one$. If
+  \begin{equation}
+    \label{eq:remove-fns}
+    \ew{\execution.\Mch \WIDE\limp \G \initially (\csched \limp \fsched)}
+  \end{equation}
+  then $\ew{\execution.\cncMch \limp (\schedule.(\cncevt.t) \limp \schedule.(\evt.t))}$.
+\end{Theorem}
+\begin{proof}[Sketch]
+  Condition \eqref{eq:remove-fns} ensures that when $\csched$ holds
+  for infinitely long, $\fsched$ holds for infinitely long, hence we can remove the
+  fine-schedule $\fsched$, i.e., replaced it by $\one$.
+\end{proof}
+%\input{temp-prop}
+
+%\input{semantics}
+
+%\input{refinement}
+
+%\input{method}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "progress"
+%%% End: 

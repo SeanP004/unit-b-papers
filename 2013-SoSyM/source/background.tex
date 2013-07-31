@@ -1,0 +1,244 @@
+% !TEX root = progress-llncs.tex
+
+\section{Background: Computation Calculus}
+\label{sec:background}
+
+This section gives a brief introduction to computation calculus, based
+on \cite{Dijkstra:1998p1128}.  Let $\State$ be the state space: a
+non-empty set of ``states''.  Let $\Computation$ be the computation
+space: a set of non-empty (finite or infinite) sequences of states
+(``computations'').  The set of computation predicates $\CPred$ 
+is defined as follows.
+%
+\begin{Definition}[Computation Predicate]
+  $\CPred = \Computation \rightarrow \BOOL$, i.e. functions from
+  computations to Booleans.
+\end{Definition}
+
+The standard boolean operators of the predicate calculus are lifted,
+i.e. extended to apply to $\CPred$. For example, assuming $s, t \in
+\CPred$ and $\Comp \in \Computation$, we have,\footnote{
+  In this paper, we use $f.x$ to denote the result of applying a
+  function $f$ to argument $x$.  Function application is
+  left-associative, so $f.x.y$ is the same as $(f.x).y$.
+}%
+%
+%\begin{eqnarray} 
+%(s \implies t).\Comp & \Wide{\eqv} & (s.\Comp \implies
+%t.\Comp) \label{eq:comp-impl} \\ 
+%\qforall{i}{}{s.i}.\Comp & \Wide{\eqv} &
+%\qforall{i}{}{s.i.\Comp}~. \label{eq:comp-forall}
+%\end{eqnarray} 
+
+  \begin{minipage}{0.45\linewidth}
+    \begin{eqnarray}
+(s \implies t).\Comp  \Wide{\eqv}  (s.\Comp \implies
+t.\Comp) \label{eq:comp-impl} 
+    \end{eqnarray}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\linewidth}
+    \begin{eqnarray}
+\qforall{i}{}{s.i}.\Comp  \Wide{\eqv}
+\qforall{i}{}{s.i.\Comp}~. \label{eq:comp-forall}
+    \end{eqnarray}
+  \end{minipage}
+\\
+
+The everywhere-operator quantifies universally over all
+computations, i.e.
+%
+\begin{eqnarray} 
+\ew{s} & ~\eqv ~& \qforall{\Comp}{}{s.\Comp} \label{eq:comp-ew}
+\end{eqnarray}
+%
+%\todo{Son: (to Simon) Hmmm, I think you can do it better than me} %
+Whenever there are no risks of ambiguity, we
+shall use $s = t$ as a shorthand for $\ew{s \eqv t}$ for computation
+predicates $s, t$.
+%Equivalence between computation predicates $s$ and $t$, i.e., $s = t$
+%is the same as $\ew{s \eqv t}$.
+
+\begin{Postulate}
+  \label{post:comp-pred-alg}
+  $CPred$ is a predicate algebra.
+\end{Postulate}
+%
+A consequence of \Post~\ref{post:comp-pred-alg} is that $\CPred$
+satisfies all postulates for the predicate calculus as defined in
+\cite{Dijkstra:1990:PCP:77545}.  In particular, $\ctrue$ (maps all
+computations to $\True$) and $\cfalse$ (maps all computations to
+$\False$) are the ``top'' and the ``bottom'' elements of the complete
+boolean lattice with the order $\ew{ \_ \implies \_}$ specifying by
+these postulates.  The lattice operations are denoted by various
+boolean operators including $\land, \lor, \neg, \implies$, etc.
+
+
+The predicate algebra is extended with sequential composition as follows.
+%
+\begin{Definition}[Sequential Composition]
+  \begin{equation}
+    \label{eq:comp-seq}
+    (s;t).\Comp  \WIDE\eqv (\size \Comp = \infty \land s.\Comp) \wide\lor
+    \qexists{n}{n < \size \Comp}{s.(\Comp \take n\! + \!1) \land t.(\Comp
+      \drop n)}
+  \end{equation}
+%
+where $\size$, $\take$ and $\drop$ denote sequence operations
+`\emph{length}', `\emph{take}' and `\emph{drop}', respectively.
+\end{Definition}
+Intuitively, a computation $\tau$ satisfies $s\,;t$ if either it is an
+infinite computation satisfying $s$, or there is a finite prefix of $\tau$
+(i.e. $\tau \take n\! + \!1$) satisfying $s$ and the corresponding suffix $\tau
+\drop n$ (which overlaps with the prefix on one state) satisfying $t$.  
+% Sequential composition operator satisfies the following postulate.
+% %
+% \begin{Postulate}
+%   \label{post:comp-seq-comp}
+%   $;$ is universally disjunctive in its first and positively
+%   disjunctive in its second argument.
+% \end{Postulate}
+% %
+
+In the course of reasoning using computation calculus, we make use of
+the distinction between infinite (``eternal'') and finite
+computations.  Two constants $\E, \F \in \CPred$ have been defined for
+this purpose. 
+\begin{Definition}[Eternal and Finite Computations] For any predicate $s$,\\[-2ex]
+  \begin{minipage}{0.4\linewidth}
+    \begin{eqnarray}
+      \E & = & \ctrue;\cfalse \label{eq:comp-eternal} \\
+      \F & = & \neg \E \label{eq:comp-finite}
+    \end{eqnarray}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.4\linewidth}
+    \begin{eqnarray}
+      \textrm{$s$ is eternal} & \, \eqv \, & \ew{s \implies \E} \label{eq:comp-s-eternal} \\
+      \textrm{$s$ is finite} & \, \eqv\, & \ew{s \implies \F} \label{eq:comp-s-finite}
+    \end{eqnarray}
+  \end{minipage}
+\end{Definition}
+Given $\F$ the temporal ``eventually'' operator (i.e., $\diamondsuit$)
+can be formulated as $\F;s$.  The ``always'' operator $\G$ is defined
+as the dual of the ``eventually'' operator.
+\begin{Definition}[Always Operator]
+  $\G s = \neg(\F;\neg s)$, for any predicate $s$
+\end{Definition}
+Important properties of $\G$ are that it is strengthening and
+monotonic.  For any predicates $s$ and $t$, we have: 
+\begin{align}
+  \label{eq:g-strengthen}
+  \ew{\G s &\limp s}~, \\
+  \label{eq:g-monotonic}
+  \ew{s \limp t} \Wide{&\limp} \ew{\G s \limp \G t}~, \\ 
+  \ew{ \G (s \limp t) \Wide{&\limp} (\G s \limp \G t) }~.
+\end{align}
+
+  % \begin{minipage}{0.3\linewidth}
+  %       \begin{align}
+  %         \label{eq:g-strengthen}
+  %         \ew{\G s \limp s}~, \\
+  %         \nonumber
+  %       \end{align}
+  % \end{minipage}
+  % \hfill
+  % \begin{minipage}{0.5\linewidth}
+  %   \begin{align}
+  %     \label{eq:g-monotonic}
+  %     \ew{s \limp t} \Wide{&\limp} \ew{\G s \limp \G t}~, \\ 
+  %       \ew{ \G (s \limp t) &\Wide{\limp} (\G s \limp \G t) }~.
+  %   \end{align}
+  % \end{minipage}
+%\begin{equation}
+%	% \text{monotonicity with \textbf{G}}
+%\end{equation}
+
+A constant $\one$ is defined as the (left- and right-) neutral element for
+sequential composition.
+\begin{Definition}[Constant $\one$] For any computation $\tau$, $\one.\tau  \Wide{\eqv}  \size \tau = 1$
+\end{Definition}
+
+\paragraph{State Predicates}
+In fact, $\one$ is the characteristic predicate of the state space.
+Moreover, we choose not to distinguish between a single state and the
+singleton computation consisting of that state, which allows us to identify
+predicates of one state with the predicates that hold only for singleton
+computations.  Let us denote the set of state predicates by 
+$\SPred$.
+\begin{Definition}[State Predicate] For any predicate $p$,
+    $p \in \SPred \Wide{\eqv} \ew {p \implies \one}$.
+\end{Definition}
+
+A consequence of this definition is that $\SPred$ is also a complete
+boolean lattice with the order $\ew{ \_ \implies \_}$, with $\one$ and
+$\cfalse$ being the ``top'' and ``bottom'' elements.  It inherits all
+the lattice operators that it is closed under: conjunction,
+disjunction, and existential quantification.  The other lattice
+operations, i.e. negation and universal quantification, are defined by
+restricting the corresponding operators on $\CPred$ to state
+predicates.  We only use state predicate negation in this paper.
+\begin{Definition}[State predicate negation $\spneg$] For
+  any state predicate $p$,
+  $\spneg p = \neg p \land \one$~.
+\end{Definition}
+% \begin{Theorem}[State Restriction] 
+%   For all $s$ and all state
+%   predicates $p$, we have
+%   \begin{align}
+%     p;s = p;\ctrue ~\land s \notag \\
+%     s;p = s ~\land \ctrue;p \tag{State restriction}
+%     \label{thm:state-restriction} 
+%   \end{align}
+% \end{Theorem}
+
+For a state predicate $p$, the set of computations with the initial
+state satisfying $p$ is captured by $p\,;\ctrue$: the weakest such 
+predicate.  A special notation $\initially : \SPred \rightarrow \CPred$ 
+is introduced to denote this predicate.
+\begin{Definition}[Initially Operator] For any state predicate $p$,
+  $\initially p = p\,;\ctrue$
+\end{Definition}
+% Later, for simplicity, we often make transformations by applying
+% \Defn~\ref{def:comp-initially} implicitly.
+
+This entails the validity of the following rule, which we will use
+anonymously in the rest of the paper: for $p, q$ two \emph{state
+  predicates}, $p \, ; q \wide= p \land q$.
+
+
+An important operator in LTL is the ``next-time operator''.   This is
+captured in computation calculus by the notion of atomic computations:
+computations of length 2.  A constant $\X \in \CPred$ is defined for
+this purpose.
+\begin{Definition}[Atomic Actions] For any computation $\tau$ and
+  predicate $a$,
+  \begin{eqnarray}
+    \X.\tau  & \WIDE\eqv & \size \tau = 2  \label{eq:comp-next} \\
+    \textrm{$a$ is an atomic action} & \WIDE\eqv & \ew {a \implies \X} 
+  \end{eqnarray}
+\end{Definition}
+Given the above definition, the ``next'' operator can be expressed
+as $\X\,;s$ for arbitrary computation $s$.
+
+% Important properties of $\X$
+% related to non-singleton computations, finite and eternal computations
+% are as follows.
+% \begin{align}
+%   \ew {\one \not\eqv \X;\ctrue}  \label{eq:comp-non-singleton} \\
+%  \infiter{\X} = \E \label{eq:next-eternal} \\
+% \finiter{\X} = \F \label{eq:next-finite}
+% \end{align}
+% We first define a constant $\s$ that will be used in our formulation
+% later.
+% \begin{Definition}[Constant $\s$]
+%  \begin{equation}
+% 	\ew{ \s ~~\equiv \one \lor \X }
+% 		\label{sem:def:S}
+% \end{equation} 
+% \end{Definition}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "progress"
+%%% End: 

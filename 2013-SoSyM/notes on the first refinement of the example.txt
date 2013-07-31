@@ -1,0 +1,48 @@
+	A0.i:	p.i  -->  x, p.i := f.i.x, false
+	HA0.i:	x = k  un  ¬w.i
+	A1.i:	p.i /\ w.i  -->  x, p.i := f.i.x, false
+	schedule strengthening
+		P0:	p.i  |->  p.i /\ w.i
+		S0:	p.i /\ w.i  un  ¬p.i
+
+for P0
+	B1.i:	p.i /\ ¬w.i -->  w.i := true
+
+	S0 satisfied by
+		A1, B1
+
+for A0.i to satisfy HA0.j (with i /= j), we introduce J0
+
+	J0:	(Ai,j: i/=j: ¬w.i \/ ¬w.j)
+
+for all i,j: i/=j: HA0.j in A0.i
+
+invariance of J0
+
+	B1.i:	p.i /\ ¬w.i { (Aj: i/=j: ¬w.j) } -->  w.i := true
+
+	P1:	p.i /\ ¬w.i |-> (Aj: i/=j: ¬w.j)
+
+		  p.i /\ ¬w.i |-> (Aj: i/=j: ¬w.j)
+		<=	{ strengthening }
+		  true |-> (Aj:: ¬w.j)
+		=	{ disjunction }
+		  ¬(Aj:: ¬w.j) |-> (Aj:: ¬w.j)
+		=	{ predicate calculus }
+		  (Ei:: w.i) |-> (Aj:: ¬w.j)
+		=	{ disjunction }
+		  (Ai:: w.i |-> (Aj:: ¬w.j) )
+		<=	{ transitivity to satisfy S0 }
+		  (Ai::    P2: (w.i |-> w.i /\ ¬p.i) 
+			/\ P3: (w.i /\ ¬p.i |-> (Aj:: ¬w.j)) )
+
+		  (Aj:: ¬w'.j)
+		=	{ case distinction with j = k }
+		  (Aj: k/=j: ¬w'.j) /\ ¬w'.k
+		=	{ C1.k: w.k := false }
+		  (Aj: k/=j: ¬w.j) /\ true
+		<=	{ J0 with i := k }
+		  w.k
+
+	C1.i:	w.i /\ ¬p.i -->  w.i := false
+		satisfies S0

@@ -1,0 +1,69 @@
+% !TEX root = progress-llncs.tex
+% \section{Related Work}
+% \label{sec:related-work}
+
+%%%%% Event-B
+% Our \unitb method is inspired by \eventB and \unity.  We borrow the
+% idea of refining specifications (transition systems) from \eventB and
+% extending it to address liveness properties.  
+\unitb and \eventB differ mainly in the scheduling
+assumptions.  In \eventB, event executions are assumed to
+satisfy the \emph{minimal progress} condition: as long
+as there are some enabled events, one of them will be executed non-deterministically. %
+%\todo{Son: (to Simon) Check the definition of minimal progress}%
+Given this assumption, certain liveness properties can be proved
+for \eventB models such as \emph{progress} and
+\emph{persistence}~\cite{hoang11:_reason_liven_proper_event_b}.
+However, this work does not discuss how the refinement notion can be
+adapted to preserve liveness properties.  Moreover, the
+minimum progress assumption is often either too weak to prove
+liveness properties or, when it is not, make the proofs needlessly 
+complicated.
+
+%   Often, one needs to have stronger assumptions
+% such as weak- or strong-fairness.
+%
+%%%%% UNITY
+% Our temporal logic reasoning is inspired by the \unity logic.
+% Operators such as $\tr$ and $\un$ are defined within
+% \unity~\cite{DBLP:books/daglib/0067338}.  What we have done is to give
+% definition to these operators using computation calculus and to prove
+% several properties related to these operators.  The main difference
+% between \unitb and \unity is in the method.  In \unitb, we gradually
+% refine the model (the transition system) in a property-preserving
+% manner.  In \unity, a specification is essentially a property and a
+% program is a transition system.  In \unitb, we unify
+% the notions of specifications and programs, allowing them to be
+% evolved together during refinement.
+%
+%%%%% The notion of fairness
+% A key important feature of \unitb is the introduction of the notion of
+% coarse-schedule and fine-schedule.  They are more general than the
+% standard weak- and strong-fairness assumptions that has been used in
+% many methods including \unity and
+% TLA+~\cite{DBLP_books_aw_Lamport2002}.  As illustrated by our example
+% in Section~\ref{sec:second-refinement} and
+% Section~\ref{sec:third-refinement}, in some cases, event scheduling
+% information can be captured quite naturally using coarse- and
+% fair-schedules, while this would not be straightforward to be captured
+% by weak- or strong-fairness assumptions.
+%
+%%%%% TLA+
+TLA+\cite{DBLP_books_aw_Lamport2002} is another formal method based on
+refinement supporting liveness properties.  The
+execution of a TLA+ model is also captured as a formula with safety
+and liveness sub-formulae.  However, refinement of the liveness part
+in TLA+ involves calculating explicitly the fairness assumptions of the
+abstract and concrete models.  In our opinion, this is not practical for 
+developing realistic systems.  The
+lack of practical rules for refining the liveness part in TLA+ might 
+stem from the view of the author of TLA+ concerning the
+\emph{unimportance of liveness}~\cite[Chapter
+8]{DBLP_books_aw_Lamport2002}.  In our opinion, liveness
+properties are as important as safety properties to design
+correct systems.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "progress"
+%%% End: 

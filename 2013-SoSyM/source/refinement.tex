@@ -1,0 +1,135 @@
+\subsection{Refinement}
+\label{sec:refinement}
+In sections \ref{sec:temporal-properties} and \ref{sec:semantics}, a semantics for temporal properties and for programs has been shown but nothing has been said yet about the notion of specification. Whereas \unity's specification corresponds to a set of temporal properties and that of \eventB correspond to something more restrictive than our notion of program, we choose to use both as our notion of specification: in \unitb, a specification is a pair made of program and a set of temporal properties.  This allows us to express a wide variety of behaviors and a large spectrum between the requirements and their implementation.
+
+We define refinement between specifications $R$ and $S$ as:
+%
+\[  R \sqsubseteq S ~~\equiv  \ew{ ex.R ~\follows ex.S } \]
+%
+\todo{define execution function $ex$}
+
+with the function $ex$ defined as follows:
+
+\begin{align}
+ex.(P, T) \3{&\equiv} saf.P \land prog.P \land \qforall{tp}{tp \in T}{tp} \\
+prog.P \3{&\equiv} \qforall{a}{a \in P}{sch.a}
+\end{align}
+
+\todo{complete first sentence} that is to say that every trace satisfying $R$ also satisfies $S$.  It is a fairly obvious definition to use but, on its own, it is not very useful because it deals with complete traces.  We would prefer to deal with assertions and relations between pairs of states.  The definition however provides a good basis for designing refinement rules.
+
+\todo{ talk about sets of actions and sets of properties }
+
+\subsubsection{Schedule Replacement}
+
+Using the following rule, we can refine a specification by substituting the coarse schedule of an action for another. 
+The idea was taken from \cite{misra:notes:strength}.  However, since we decoupled the notion of guard and coarse and fine schedules, we don't require the schedule to be strengthened.
+Formally, we can refine a specification containing the following action: 
+
+\newcommand{\AAA}{\Bevt{A}}
+	
+\begin{Bcode}
+  $
+  \ubevent{\AAA0}{}{& g}{ & BA }{ & p}{}
+  $
+\end{Bcode}
+
+by replacing the action by the following action and properties: \todo{ make sure it is clear that the properties are part of the spec rather proved about the spec }
+
+\begin{minipage}{0.48\textwidth}
+\begin{Bcode}
+  $
+  \ubevent{\AAA1}{}{& g}{& BA }{& q}{}
+  $
+\end{Bcode}
+\end{minipage}
+\begin{minipage}{0.48\textwidth}
+\bf{properties}
+\begin{align}
+& p ~\mapsto q \tag{P1} \label{ref:rep:P1} \\
+& q ~\un \neg p \tag{S1} \label{ref:rep:S1} \\
+\inv{~ q \implies g } \tag{J1}  \label{ref:rep:J1}
+\end{align}
+\end{minipage}
+\todo{ find a nice layout to show properties as part of specifications}
+
+It is important to note that, although we can map the above properties  to programs, they are not side conditions of the refinement rule; they are a part of the refined specification and can be, in turn refined either to code or to other properties.
+
+\todo{define the expression "to be scheduled forever"}
+The role of the added properties (\eqref{ref:rep:P1} and \eqref{ref:rep:S1}) is to ensure that the concrete action $\AAA1$ stays scheduled forever at least in those cases where the abstract action $\AAA0$ stays scheduled forever.  
+\eqref{ref:rep:P1} ensures that, if $p$ becomes true, possibly before remaining true forever, $q$ will some time later also become true.  
+Then, thanks to \eqref{ref:rep:S1}, provided $p$ and $q$ hold together, $q$ will hold as long as $p$ holds.
+
+\todo{talk about feasibility - for example, the schedule may impose the execution of action $\AAA$ whenever $p$ holds but it may turn out that $p$ is to weak to ensure safety.}
+Finally, the purpose of \eqref{ref:rep:J1} is to ensure the feasibility of the schedule.
+
+\subsubsection{Introduction of Strong Fairness}
+
+As a result of the strengthening of a guard, it may become necessary to strengthen the coarse schedule of an action.  However, the related proof obligations may prove impossible to satisfy.  In that case, we can add a fine schedule instead which incurs an obligation easier to satisfy.
+
+Given is the following action in a specification:
+
+\begin{Bcode}
+  $
+  \ubevent{\AAA0}{}{& g}{ & BA }{ & p}{}
+  $
+\end{Bcode}
+
+we can add a fine schedule by replacing the action by the following action and property: \todo{ make sure it is clear that the properties are part of the spec rather proved about the spec }
+
+\begin{minipage}{0.48\textwidth}
+\begin{Bcode}
+  $
+  \ubevent{\AAA1}{}{& g}{& BA }{& p}{& q}
+  $
+\end{Bcode}
+\end{minipage}
+\begin{minipage}{0.48\textwidth}
+\begin{Bcode}
+%\bf{properties}
+%\begin{align}
+%& p ~\mapsto q \tag{P1} \label{ref:isf:P1} \\
+%& \inv{~ p \land q ~\implies g } \tag{J1}  \label{ref:isf:J1}
+%\end{align}
+\ubprops{
+	\ubproperty{ & p ~\mapsto q}{P1}{ref:isf:P1} \\
+	\ubproperty{& \inv{~ p \land q ~\implies g }}{J1}{ref:isf:J1}
+}
+\end{Bcode}
+\end{minipage}
+\todo{introduce the syntax}
+\todo{introduce distinct labels for actions and properties?}
+
+The change between $\AAA0$ and $\AAA1$ consists in strengthening the conditions under which $\AAA\_$ will be scheduled in.  In addition to its coarse schedule ($p$) being satisfied for infinitely long, its fine schedule ($q$) must be satisfied infinitely often.  \eqref{ref:isf:P1} ensures that one implies the other; if $p$ holds forever, \eqref{ref:isf:P1} will cause $q$ to hold infinitely often, hence making the scheduling assumptions equivalent between the two specifications.
+\todo{ define "scheduling assumptions" }
+
+\subsubsection{Elimination of Strong Fairness}
+
+The elimination of strong fairness boils down to remove fine schedules. In an action with coarse schedule $p$ and fine schedule $q$, the fine schedule can be removed provided the following property holds of the refinement:
+
+
+\begin{minipage}{0.48\textwidth}
+\bf{properties}
+\begin{align}
+& \inv{~ p  ~\implies q } \tag{J1}  \label{ref:isf:J1}
+\end{align}
+\end{minipage}
+
+
+This is not usually the case but it can be achieved by modifying either of the coarse schedule ---with the rule shown above--- or the fine schedule ---using rules from \cite{thesis/hudon2011}.  In the example, only the latter will be necessary.
+\todo{ really? }
+
+\subsubsection{Others}
+
+As in Event-B, the non-determinism present in individual actions can be reduced and their guards can be strengthened.
+
+It is also possible to add desired progress and safety properties and variables as one moves along a refinement strategy to introduce the various requirements 
+
+and to refine individual temporal properties into actions using the rules shown in section \ref{sec:temporal-properties}.
+
+\todo{what if we started with the simplest cases?}
+\todo{what about the proof obligation due to safety on future events?}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "progress"
+%%% End: 
